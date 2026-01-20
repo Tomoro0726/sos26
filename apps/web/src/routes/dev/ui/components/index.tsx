@@ -9,7 +9,6 @@ import {
 import {
 	Button,
 	Checkbox,
-	Radio,
 	Switch,
 	TextArea,
 	TextField,
@@ -104,28 +103,6 @@ function ComponentsPage() {
 						<div className={styles.stack}>
 							<Checkbox label="Size 1" size="1" />
 							<Checkbox label="Size 2" size="2" />
-						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* Radio (単体) */}
-			<section className={styles.section}>
-				<h3>Radio（単体）</h3>
-				<div className={styles.grid}>
-					<div className={styles.item}>
-						<h4>Basic</h4>
-						<div className={styles.stack}>
-							<Radio name="standalone" value="a" label="選択肢 A" />
-							<Radio name="standalone" value="b" label="選択肢 B" />
-							<Radio name="standalone" value="c" label="選択肢 C" disabled />
-						</div>
-					</div>
-					<div className={styles.item}>
-						<h4>Size</h4>
-						<div className={styles.stack}>
-							<Radio name="size" value="1" label="Size 1" size="1" />
-							<Radio name="size" value="2" label="Size 2" size="2" />
 						</div>
 					</div>
 				</div>

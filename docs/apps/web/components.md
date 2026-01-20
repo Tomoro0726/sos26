@@ -31,14 +31,12 @@
 		- [例: Button](#例-button)
 		- [例: TextField](#例-textfield)
 		- [例: Dialog](#例-dialog)
-	- [Checkbox / Radio の使い分け](#checkbox--radio-の使い分け)
+	- [Checkbox / RadioGroup の使い分け](#checkbox--radiogroup-の使い分け)
 		- [一覧](#一覧)
 		- [使い分けの指針](#使い分けの指針)
 			- [Checkbox（単体）を使う場合](#checkbox単体を使う場合)
 			- [CheckboxGroup を使う場合](#checkboxgroup-を使う場合)
-			- [Radio（単体）を使う場合](#radio単体を使う場合)
 			- [RadioGroup を使う場合](#radiogroup-を使う場合)
-		- [推奨](#推奨)
 	- [Typography（Text / Heading）](#typographytext--heading)
 		- [UI 部分（Radix Text / Heading を使用）](#ui-部分radix-text--heading-を使用)
 		- [コンテンツ部分（通常の HTML 要素を使用）](#コンテンツ部分通常の-html-要素を使用)
@@ -147,7 +145,6 @@ src/components/
 ├── primitives/          # Radix UI Themes のラッパー（単一責務）
 │   ├── Button/
 │   ├── Checkbox/
-│   ├── Radio/
 │   ├── Switch/
 │   ├── TextField/
 │   ├── TextArea/
@@ -163,7 +160,7 @@ src/components/
 
 | 種類           | 役割                                                 | 例                                    |
 | -------------- | ---------------------------------------------------- | ------------------------------------- |
-| **primitives** | Radix の単一コンポーネントをラップ。制約と付加を行う | Button, TextField, Checkbox, Radio    |
+| **primitives** | Radix の単一コンポーネントをラップ。制約と付加を行う | Button, TextField, Checkbox, Switch   |
 | **patterns**   | 複数の primitives を組み合わせた複合コンポーネント   | RadioGroup, CheckboxGroup, FormDialog |
 
 patterns は以下の場合に作成する：
@@ -181,7 +178,7 @@ patterns は以下の場合に作成する：
 - Button
 - TextField / TextArea
 - Select
-- Checkbox / Radio / Switch
+- Checkbox / Switch
 - CheckboxGroup / RadioGroup（patterns）
 - Dialog
 - DropdownMenu
@@ -470,9 +467,9 @@ export function ConfirmDialog({
 
 ---
 
-## Checkbox / Radio の使い分け
+## Checkbox / RadioGroup の使い分け
 
-Checkbox と Radio にはそれぞれ**単体版**（primitives）と**グループ版**（patterns）が存在する。
+選択系コンポーネントは用途に応じて使い分ける。
 
 ### 一覧
 
@@ -480,7 +477,6 @@ Checkbox と Radio にはそれぞれ**単体版**（primitives）と**グルー
 | --------------- | ---------- | ---------------------- |
 | `Checkbox`      | primitives | 単体の真偽値入力       |
 | `CheckboxGroup` | patterns   | 複数選択可能なグループ |
-| `Radio`         | primitives | 単体のラジオボタン     |
 | `RadioGroup`    | patterns   | 排他選択のグループ     |
 
 ### 使い分けの指針
@@ -511,16 +507,6 @@ Checkbox と Radio にはそれぞれ**単体版**（primitives）と**グルー
 </CheckboxGroup>
 ```
 
-#### Radio（単体）を使う場合
-
-- フォームライブラリ等の都合で `name` 属性による紐付けが必要な場合
-- グループとしての構造が不要な場合
-
-```tsx
-<Radio name="gender" value="male" label="男性" />
-<Radio name="gender" value="female" label="女性" />
-```
-
 #### RadioGroup を使う場合
 
 - 「お支払い方法」など、**排他的な選択肢群**
@@ -533,15 +519,8 @@ Checkbox と Radio にはそれぞれ**単体版**（primitives）と**グルー
 </RadioGroup>
 ```
 
-### 推奨
-
-基本的には **Group 版（patterns）を優先**して使用する。
-
-- fieldset / legend による適切なグルーピングが自動適用される
-- グループ全体への required / disabled 制御が容易
-- a11y が構造的に担保される
-
-単体版は、本当に独立した 1 つの真偽値を扱う場合（同意チェックボックスなど）に限定する。
+Checkbox 単体は、本当に独立した 1 つの真偽値を扱う場合（同意チェックボックスなど）に限定する。
+複数の選択肢がある場合は必ず Group 版を使用すること。
 
 ---
 
