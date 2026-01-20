@@ -36,28 +36,31 @@
 ### レイヤー構成
 
 ```css
-@layer reset, components;
+@layer reset, radix, components;
 
 @import "./reset.css" layer(reset);
 @import "./global.scss" layer(reset);
+@import "@radix-ui/themes/styles.css" layer(radix);
 ```
 
 | レイヤー     | 用途                                     | 優先度 |
 | ------------ | ---------------------------------------- | ------ |
 | `reset`      | リセット CSS、グローバルスタイル         | 低     |
+| `radix`      | Radix UI Themes のスタイル               | 中     |
 | `components` | コンポーネントのスタイル（CSS Modules）  | 高     |
 
 ### レイヤーの効果
 
 - **優先順位の明確化**: レイヤーの定義順で優先度が決まる（後に定義されたレイヤーが優先）
 - **詳細度の問題を回避**: レイヤー間では詳細度に関係なく、後のレイヤーが勝つ
-- **Radix との共存**: Radix UI Themes のスタイルは `components` レイヤーより前に適用されるため、必要に応じて上書き可能
+- **Radix スタイルの上書き**: `radix` レイヤーより `components` レイヤーが優先されるため、CSS Modules で Radix のスタイルを確実に上書きできる
 
 ### 注意点
 
-- CSS Modules で書いたスタイルは自動的に `components` レイヤーに属する
+- CSS Modules で書いたスタイルは `@layer components { ... }` で囲むこと
 - 新しいレイヤーを追加する場合は `@layer` 宣言の順序を慎重に検討すること
 - グローバルに適用したいスタイルは `reset` レイヤーに配置
+- Radix のスタイルは `main.tsx` ではなく `index.css` 内で読み込む（レイヤー制御のため）
 
 ## Theme の設定
 

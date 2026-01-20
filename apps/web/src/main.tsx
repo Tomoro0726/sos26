@@ -5,7 +5,6 @@ import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "./styles/index.css";
-import "@radix-ui/themes/styles.css";
 
 // Create a new router instance
 const router = createRouter({ routeTree });

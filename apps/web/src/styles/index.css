@@ -1,4 +1,5 @@
-@layer reset, components;
+@layer reset, radix, components;
 
 @import "./reset.css" layer(reset);
 @import "./global.scss" layer(reset);
+@import "@radix-ui/themes/styles.css" layer(radix);
