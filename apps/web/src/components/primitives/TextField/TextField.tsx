@@ -16,6 +16,7 @@ import styles from "./TextField.module.scss";
  * - label 必須（a11y 保証）
  * - error 時の統一的なスタイル + aria-invalid
  * - id 自動生成（label と input の紐付け）
+ * - required マークの表示
  *
  * ## 例外を許す場合
  * - 検索バーなど label が視覚的に不要な場合は aria-label で対応

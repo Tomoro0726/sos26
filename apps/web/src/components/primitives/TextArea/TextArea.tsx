@@ -17,6 +17,7 @@ import styles from "./TextArea.module.scss";
  * - error 時の統一的なスタイル + aria-invalid
  * - id 自動生成（label と textarea の紐付け）
  * - resize: "vertical" デフォルト
+ * - required マークの表示
  *
  * ## 例外を許す場合
  * - 特殊なレイアウトが必要な場合は patterns/ で対応
