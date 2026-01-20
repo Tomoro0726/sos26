@@ -8,14 +8,45 @@
 
 ## 目次
 
-- [基本方針](#基本方針)
-- [なぜラップするのか](#なぜラップするのか)
-- [禁止事項](#禁止事項)
-- [ディレクトリ構造](#ディレクトリ構造)
-- [原子的コンポーネント（Primitives）](#原子的コンポーネントprimitives)
-- [レイアウト設計](#レイアウト設計)
-- [ページ実装ルール](#ページ実装ルール)
-- [判断に迷ったときの指針](#判断に迷ったときの指針)
+- [UIコンポーネント設計規約](#uiコンポーネント設計規約)
+	- [目次](#目次)
+	- [基本方針](#基本方針)
+		- [責務分離の原則](#責務分離の原則)
+	- [コンポーネント一覧ページ](#コンポーネント一覧ページ)
+	- [なぜラップするのか](#なぜラップするのか)
+		- [1. UIの自由度を「意図的に制限」する](#1-uiの自由度を意図的に制限する)
+		- [2. アクセシビリティ（a11y）事故を構造的に防ぐ](#2-アクセシビリティa11y事故を構造的に防ぐ)
+		- [3. 横断的要件の注入点を一箇所に集約する](#3-横断的要件の注入点を一箇所に集約する)
+		- [4. カスタムデザインを適用できる](#4-カスタムデザインを適用できる)
+		- [ラップは「抽象化」ではなく「制約付き具体化」](#ラップは抽象化ではなく制約付き具体化)
+	- [禁止事項](#禁止事項)
+	- [ディレクトリ構造](#ディレクトリ構造)
+		- [primitives と patterns の違い](#primitives-と-patterns-の違い)
+	- [原子的コンポーネント（Primitives）](#原子的コンポーネントprimitives)
+		- [対象コンポーネント](#対象コンポーネント)
+		- [Wrapper 設計の原則](#wrapper-設計の原則)
+			- [NG: 単なる props 転送](#ng-単なる-props-転送)
+			- [OK: 制約と付加がある](#ok-制約と付加がある)
+		- [Wrapper のドキュメントルール](#wrapper-のドキュメントルール)
+		- [例: Button](#例-button)
+		- [例: TextField](#例-textfield)
+		- [例: Dialog](#例-dialog)
+	- [Checkbox / Radio の使い分け](#checkbox--radio-の使い分け)
+		- [一覧](#一覧)
+		- [使い分けの指針](#使い分けの指針)
+			- [Checkbox（単体）を使う場合](#checkbox単体を使う場合)
+			- [CheckboxGroup を使う場合](#checkboxgroup-を使う場合)
+			- [Radio（単体）を使う場合](#radio単体を使う場合)
+			- [RadioGroup を使う場合](#radiogroup-を使う場合)
+		- [推奨](#推奨)
+	- [Typography（Text / Heading）](#typographytext--heading)
+		- [UI 部分（Radix Text / Heading を使用）](#ui-部分radix-text--heading-を使用)
+		- [コンテンツ部分（通常の HTML 要素を使用）](#コンテンツ部分通常の-html-要素を使用)
+		- [判断基準](#判断基準)
+	- [レイアウト設計](#レイアウト設計)
+		- [レスポンシブ](#レスポンシブ)
+	- [ページ実装ルール](#ページ実装ルール)
+	- [判断に迷ったときの指針](#判断に迷ったときの指針)
 
 ## 基本方針
 
@@ -28,6 +59,18 @@ UIは以下の3レイヤーに分けて設計する。
 | 原子的コンポーネント | a11y / 挙動 / 状態管理     | Radix UI Themes        |
 | レイアウト           | 配置・構造                 | 自作CSS（Flex / Grid） |
 | デザイン値           | 色・余白・角丸・文字サイズ | Radix CSS Variables    |
+
+## コンポーネント一覧ページ
+
+開発環境では `/dev/ui/components` にアクセスすることで、実装済みの primitives / patterns コンポーネントを一覧で確認できる。
+
+このページでは以下を確認できる：
+
+- 各コンポーネントの見た目・バリエーション
+- props の違いによる表示差異（intent, size, disabled, error など）
+- 実際の操作感（loading 状態、フォーム入力など）
+
+新しいコンポーネントを追加した際は、このページにもサンプルを追加すること。
 
 ## なぜラップするのか
 
@@ -103,21 +146,25 @@ Wrapper は以下を目的としない：
 src/components/
 ├── primitives/          # Radix UI Themes のラッパー（単一責務）
 │   ├── Button/
+│   ├── Checkbox/
+│   ├── Radio/
+│   ├── Switch/
 │   ├── TextField/
-│   ├── Dialog/
+│   ├── TextArea/
 │   └── index.ts         # 一括エクスポート
 │
 └── patterns/            # 複合コンポーネント（複数の primitives を組み合わせ）
-    ├── SearchForm/
-    └── UserCard/
+    ├── CheckboxGroup/
+    ├── RadioGroup/
+    └── index.ts
 ```
 
 ### primitives と patterns の違い
 
-| 種類           | 役割                                                 | 例                               |
-| -------------- | ---------------------------------------------------- | -------------------------------- |
-| **primitives** | Radix の単一コンポーネントをラップ。制約と付加を行う | Button, TextField, Dialog        |
-| **patterns**   | 複数の primitives を組み合わせた複合コンポーネント   | SearchForm, UserCard, FormDialog |
+| 種類           | 役割                                                 | 例                                    |
+| -------------- | ---------------------------------------------------- | ------------------------------------- |
+| **primitives** | Radix の単一コンポーネントをラップ。制約と付加を行う | Button, TextField, Checkbox, Radio    |
+| **patterns**   | 複数の primitives を組み合わせた複合コンポーネント   | RadioGroup, CheckboxGroup, FormDialog |
 
 patterns は以下の場合に作成する：
 
@@ -132,9 +179,10 @@ patterns は以下の場合に作成する：
 以下は**必ず Wrapper 経由**で使用する。
 
 - Button
-- TextField
+- TextField / TextArea
 - Select
-- Checkbox / Switch
+- Checkbox / Radio / Switch
+- CheckboxGroup / RadioGroup（patterns）
 - Dialog
 - DropdownMenu
 
@@ -419,6 +467,141 @@ export function ConfirmDialog({
 - `title` + `description` 構造を強制し、適切な情報提供を保証
 - `intent="danger"` で視覚的な警告を自動適用
 - AlertDialog により ESC / 背景クリックでの誤操作を防止
+
+---
+
+## Checkbox / Radio の使い分け
+
+Checkbox と Radio にはそれぞれ**単体版**（primitives）と**グループ版**（patterns）が存在する。
+
+### 一覧
+
+| コンポーネント  | 分類       | 用途                   |
+| --------------- | ---------- | ---------------------- |
+| `Checkbox`      | primitives | 単体の真偽値入力       |
+| `CheckboxGroup` | patterns   | 複数選択可能なグループ |
+| `Radio`         | primitives | 単体のラジオボタン     |
+| `RadioGroup`    | patterns   | 排他選択のグループ     |
+
+### 使い分けの指針
+
+#### Checkbox（単体）を使う場合
+
+- 「利用規約に同意する」など、**単独の真偽値**を扱う
+- 他の選択肢と関連しない独立したオン/オフ
+
+```tsx
+<Checkbox
+  label="利用規約に同意する"
+  checked={agreed}
+  onCheckedChange={setAgreed}
+/>
+```
+
+#### CheckboxGroup を使う場合
+
+- 「興味のある分野」など、**複数選択可能な選択肢群**
+- 選択した値を配列で管理する
+
+```tsx
+<CheckboxGroup label="興味のある分野" value={interests} onValueChange={setInterests}>
+  <CheckboxGroupItem value="tech">テクノロジー</CheckboxGroupItem>
+  <CheckboxGroupItem value="design">デザイン</CheckboxGroupItem>
+  <CheckboxGroupItem value="business">ビジネス</CheckboxGroupItem>
+</CheckboxGroup>
+```
+
+#### Radio（単体）を使う場合
+
+- フォームライブラリ等の都合で `name` 属性による紐付けが必要な場合
+- グループとしての構造が不要な場合
+
+```tsx
+<Radio name="gender" value="male" label="男性" />
+<Radio name="gender" value="female" label="女性" />
+```
+
+#### RadioGroup を使う場合
+
+- 「お支払い方法」など、**排他的な選択肢群**
+- グループ全体に対するラベルや required 表示が必要
+
+```tsx
+<RadioGroup label="お支払い方法" value={payment} onValueChange={setPayment}>
+  <RadioGroupItem value="card">クレジットカード</RadioGroupItem>
+  <RadioGroupItem value="bank">銀行振込</RadioGroupItem>
+</RadioGroup>
+```
+
+### 推奨
+
+基本的には **Group 版（patterns）を優先**して使用する。
+
+- fieldset / legend による適切なグルーピングが自動適用される
+- グループ全体への required / disabled 制御が容易
+- a11y が構造的に担保される
+
+単体版は、本当に独立した 1 つの真偽値を扱う場合（同意チェックボックスなど）に限定する。
+
+---
+
+## Typography（Text / Heading）
+
+UI 内のテキスト表示には Radix の `Text` / `Heading` コンポーネントを使用するが、**用途によって使い分ける**。
+
+### UI 部分（Radix Text / Heading を使用）
+
+以下のような「アプリケーション UI」に属するテキストは、Radix の Typography コンポーネントを使用する：
+
+- ボタン、フォームラベル、エラーメッセージ
+- ダイアログのタイトル・説明
+- 設定画面、管理画面のテキスト
+- ナビゲーション、メニュー項目
+
+```tsx
+import { Heading, Text } from "@radix-ui/themes";
+
+<Heading size="5">設定</Heading>
+<Text size="2" color="gray">アカウント設定を変更できます</Text>
+```
+
+**理由:**
+
+- Radix の Design Token と統合され、テーマ切り替えに自動対応
+- サイズ・色・ウェイトが一貫したスケールで管理される
+- a11y に配慮した適切なコントラスト比
+
+### コンテンツ部分（通常の HTML 要素を使用）
+
+以下のような「コンテンツ」に属するテキストは、通常の HTML 要素（`<h1>`, `<p>`, `<article>` など）を使用してよい：
+
+- 記事本文
+- 利用規約、プライバシーポリシー
+- ヘルプドキュメント
+- マークダウンから生成されるコンテンツ
+
+```tsx
+<article className={styles.article}>
+  <h1>利用規約</h1>
+  <p>本規約は、当サービスの利用条件を定めるものです。</p>
+</article>
+```
+
+**理由:**
+
+- 長文コンテンツには独自のタイポグラフィ設計が必要な場合がある
+- CMSやマークダウンから生成されるHTMLとの親和性
+- SEO や構造化の観点で素の HTML が適切な場合がある
+
+### 判断基準
+
+| 用途              | 使用するもの        |
+| ----------------- | ------------------- |
+| UI ラベル・操作系 | `Text` / `Heading`  |
+| フォーム周り      | `Text` / `Heading`  |
+| ダイアログ        | `Text` / `Heading`  |
+| 記事・規約        | `<h1>` / `<p>` など |
+| マークダウン由来  | `<h1>` / `<p>` など |
 
 ---
 
