@@ -229,18 +229,18 @@ Radix の `Button` は `variant`, `size`, `color`, `highContrast`, `radius` な�
 ```tsx
 // src/components/primitives/Button/Button.tsx
 import { Button as RadixButton } from "@radix-ui/themes";
-import type { ReactNode } from "react";
+import type { ComponentProps, MouseEvent, ReactNode } from "react";
+import styles from "./Button.module.scss";
 
 /**
  * Button - アプリケーション標準のボタン
  *
  * ## 制限していること
  * - variant/color: intent に集約（primary/secondary/danger/ghost）
- * - size: "1" | "2" のみ（大きすぎるボタンは不要）
+ * - size: "1" | "2" のみ（"3", "4" は大きすぎるため不可）
  * - highContrast, radius: 指定不可（デザイン統一）
  *
  * ## 付加している振る舞い
- * - loading: true で自動的に disabled + スピナー表示
  * - type: デフォルト "button"（フォーム誤送信防止）
  *
  * ## 例外を許す場合
@@ -248,12 +248,20 @@ import type { ReactNode } from "react";
  * - 特殊なレイアウトが必要な場合は patterns/ で対応
  */
 
+type RadixButtonProps = ComponentProps<typeof RadixButton>;
+
 const intentMap = {
-  primary: { variant: "solid" },
-  secondary: { variant: "soft" },
+  primary: { variant: "solid", color: undefined },
+  secondary: { variant: "outline", color: undefined },
   danger: { variant: "solid", color: "red" },
-  ghost: { variant: "ghost" },
-} as const;
+  ghost: { variant: "ghost", color: undefined },
+} as const satisfies Record<
+  string,
+  {
+    variant: RadixButtonProps["variant"];
+    color: RadixButtonProps["color"];
+  }
+>;
 
 type ButtonProps = {
   children: ReactNode;
@@ -262,7 +270,7 @@ type ButtonProps = {
   loading?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
 export function Button({
@@ -278,28 +286,25 @@ export function Button({
 
   return (
     <RadixButton
+      className={styles.button}
       variant={variant}
       color={color}
       size={size}
-      disabled={disabled || loading}
+      loading={loading}
+      disabled={disabled}
       type={type}
       onClick={onClick}
-      aria-busy={loading}
     >
-      {loading ? <Spinner /> : children}
+      {children}
     </RadixButton>
   );
-}
-
-function Spinner() {
-  return <span className="spinner" aria-hidden="true" />;
 }
 ```
 
 **ポイント:**
 - `variant` と `color` を `intent` に集約し、意味のある選択肢だけを提供
-- `loading` 状態を組み込み、disabled との整合を自動化
-- `aria-busy` で loading 中のスクリーンリーダー対応
+- `loading` は Radix の組み込み機能を使用（スピナー表示と disabled を自動処理）
+- CSS Modules でカスタムスタイルを適用
 
 ---
 
