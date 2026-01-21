@@ -107,6 +107,8 @@ createRoot(rootElement).render(
 | `scaling` | UIのスケーリング | `"90%"`, `"100%"`, `"110%"` |
 | `appearance` | ライト/ダーク | `"light"`, `"dark"`, `"inherit"` |
 
+[https://www.radix-ui.com/themes/playground](Radix Themes Playground) で確認可能。
+
 ### 色の扱い
 
 - `accentColor` / `grayColor` は **Radix 提供のもの**を使用
