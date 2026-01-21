@@ -35,6 +35,7 @@
     "@vitest/coverage-v8": "^4.0.16",
     "lefthook": "^2.0.13",
     "prisma": "^7.2.0",
+    "prisma-markdown": "^4.0.0",
     "sass-embedded": "^1.97.2",
     "turbo": "^2.7.3",
     "typescript": "~5.9.3",
