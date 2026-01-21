@@ -60,7 +60,9 @@ export function Checkbox({
 				name={name}
 				value={value}
 			/>
-			<Text size={size}>{label}</Text>
+			<Text size={size} weight="medium">
+				{label}
+			</Text>
 		</label>
 	);
 }

@@ -29,6 +29,7 @@ type SwitchProps = {
 	disabled?: boolean;
 	required?: boolean;
 	name?: string;
+	value?: string;
 };
 
 export function Switch({
@@ -40,6 +41,7 @@ export function Switch({
 	disabled,
 	required,
 	name,
+	value = "on",
 }: SwitchProps) {
 	const id = useId();
 
@@ -55,8 +57,11 @@ export function Switch({
 				disabled={disabled}
 				required={required}
 				name={name}
+				value={value}
 			/>
-			<Text size={size}>{label}</Text>
+			<Text size={size} weight="medium">
+				{label}
+			</Text>
 		</label>
 	);
 }
