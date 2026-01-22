@@ -66,8 +66,9 @@ EMAIL_SANDBOX=false
 - メールアドレス形式である必要があります（`z.email()`）
 
 **EMAIL_SANDBOX:**
-- 真偽値。`z.coerce.boolean()` により `"true"/"false"` 文字列も受け付けます
+- 真偽値（厳密）。文字列 `"true"` / `"false"` のみ受け付けます
 - 既定は `false`
+- `"1"`/`"0"`、`"yes"`/`"no"` などの値は無効です（起動時にバリデーションエラー）
 
 ### エラー例
 
