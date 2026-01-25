@@ -23,6 +23,17 @@ const envSchema = z.object({
 		.enum(["true", "false"])
 		.default("false")
 		.transform(v => v === "true"),
+
+	// Firebase Admin
+	FIREBASE_PROJECT_ID: z.string().min(1),
+	FIREBASE_CLIENT_EMAIL: z.string().min(1),
+	FIREBASE_PRIVATE_KEY: z
+		.string()
+		.min(1)
+		.transform(v => v.replace(/\\n/g, "\n")),
+
+	// 認証リンク用のアプリURL
+	APP_URL: z.url(),
 });
 
 export const env = envSchema.parse({
@@ -31,6 +42,10 @@ export const env = envSchema.parse({
 	SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 	EMAIL_FROM: process.env.EMAIL_FROM,
 	EMAIL_SANDBOX: process.env.EMAIL_SANDBOX,
+	FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+	FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+	FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+	APP_URL: process.env.APP_URL,
 });
 
 export type Env = z.infer<typeof envSchema>;
