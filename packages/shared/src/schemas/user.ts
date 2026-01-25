@@ -2,6 +2,18 @@ import { z } from "zod";
 import { tsukubaEmailSchema } from "./email";
 
 /**
+ * 名スキーマ
+ */
+export const firstNameSchema = z.string().min(1, "名を入力してください");
+export type FirstName = z.infer<typeof firstNameSchema>;
+
+/**
+ * 姓スキーマ
+ */
+export const lastNameSchema = z.string().min(1, "姓を入力してください");
+export type LastName = z.infer<typeof lastNameSchema>;
+
+/**
  * ユーザーステータス
  * - ACTIVE: 有効
  * - DISABLED: 無効化
@@ -32,8 +44,8 @@ export const userSchema = z.object({
 	id: z.cuid(),
 	firebaseUid: z.string().min(1).max(128),
 	email: tsukubaEmailSchema,
-	firstName: z.string(),
-	lastName: z.string(),
+	firstName: firstNameSchema,
+	lastName: lastNameSchema,
 	role: userRoleSchema,
 	status: userStatusSchema,
 	createdAt: z.date(),
