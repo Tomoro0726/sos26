@@ -21,7 +21,8 @@ DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
 bun run db:generate
 ```
 
-生成されたクライアントは `generated/prisma` に出力されます。
+生成されたクライアントはデフォルトで `node_modules/@prisma/client` に出力されます。
+アプリケーションからは `@prisma/client` をインポートして利用します。
 
 ## コマンド一覧
 
@@ -66,7 +67,7 @@ bun run db:migrate:dev --name add_users_table
 ### 3. Prisma Client の使用
 
 ```typescript
-import { PrismaClient } from '../generated/prisma'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -77,6 +78,15 @@ const user = await prisma.user.create({
     name: 'Test User',
   },
 })
+```
+
+API（Hono）では Prisma Client をシングルトンで管理しています。基本的には次のユーティリティから利用してください（詳細は `docs/apps/api/prisma.md` を参照）。
+
+```typescript
+// apps/api 内からの例
+import { prisma } from '../lib/prisma'
+
+const users = await prisma.user.findMany()
 ```
 
 ## 本番デプロイ
