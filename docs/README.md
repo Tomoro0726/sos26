@@ -7,7 +7,6 @@
 - プロジェクト概要: `README.md`（リポジトリルート）
 - **認証**
   - 認証仕様書: `docs/auth.md`
-  - 認証実装ガイド: `docs/auth-implement.md`
 - Web 開発
   - ルーティング: `docs/apps/web/routing.md`
   - API クライアント: `docs/apps/web/api-client.md`

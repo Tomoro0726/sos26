@@ -4,7 +4,10 @@
 Outlook 等のメールクライアントによる **リンク自動踏破問題への対策**を必須とし、
 Firebase Authentication を IdP として利用しつつ、**ユーザー作成はバックエンド主導**で行う。
 
-> **Note**: 実装詳細は [`auth-implement.md`](./auth-implement.md) を参照。
+> 実装詳細は各ドキュメントを参照:
+> - API 実装: `docs/apps/api/auth.md`
+> - Web 実装: `docs/apps/web/auth.md`
+> - 送信メール: `docs/apps/api/send-mail.md`
 
 ---
 
