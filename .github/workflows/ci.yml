@@ -28,7 +28,7 @@ jobs:
 
       - name: Check Prisma schema format
         run: |
-          bun run format:prisma
+          bun run db:format
           git diff --exit-code prisma/schema.prisma
 
       - name: Type check
