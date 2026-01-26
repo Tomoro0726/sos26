@@ -48,7 +48,7 @@ export const userSchema = z.object({
 	lastName: lastNameSchema,
 	role: userRoleSchema,
 	status: userStatusSchema,
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 export type User = z.infer<typeof userSchema>;

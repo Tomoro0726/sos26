@@ -16,6 +16,7 @@ async function getAuthToken(): Promise<string | null> {
 export const httpClient = ky.create({
 	prefixUrl: env.VITE_API_BASE_URL,
 	timeout: 10000,
+	credentials: "include",
 	retry: {
 		limit: 1,
 		methods: ["get", "put", "head", "delete", "options", "trace"],
