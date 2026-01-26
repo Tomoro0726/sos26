@@ -145,19 +145,21 @@ await prisma.$transaction(async (tx) => {
 ### 1. スキーマを編集
 
 ```
-prisma/schema.prisma
+apps/api/prisma/schema.prisma
 ```
 
 ### 2. マイグレーション作成・適用
 
 ```bash
-npx prisma migrate dev --name <migration_name>
+bun run db:migrate:dev
+# または apps/api ディレクトリで
+bun run db:migrate:dev
 ```
 
 ### 3. クライアント再生成（自動実行される）
 
 ```bash
-npx prisma generate
+bun run db:generate
 ```
 
 ---

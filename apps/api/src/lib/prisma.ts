@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Errors } from "./error";
 
 const globalForPrisma = globalThis as unknown as {
@@ -22,7 +23,7 @@ if (process.env.NODE_ENV !== "production") {
  * }
  */
 export function handlePrismaError(e: unknown): never {
-	if (e instanceof Prisma.PrismaClientKnownRequestError) {
+	if (e instanceof PrismaClientKnownRequestError) {
 		switch (e.code) {
 			case "P2002": // ユニーク制約違反
 				throw Errors.alreadyExists("既に存在するデータです");
