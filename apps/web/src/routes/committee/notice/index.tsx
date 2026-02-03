@@ -1,5 +1,7 @@
 import {
+	ArrowUpIcon,
 	MagnifyingGlassIcon,
+	MixerVerticalIcon,
 	PlusIcon,
 	TrashIcon,
 } from "@radix-ui/react-icons";
@@ -175,72 +177,90 @@ function CommitteeNoticePage() {
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>タイトル</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>オーナー</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>共有者</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>投稿日</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>更新日</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
 									<div className={noticeStyles.headerCell}>
 										<Text>承認者</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
 										<IconButton
 											variant="ghost"
 											size="1"
 											aria-label="フィルター"
 										>
-											<Text>⋮</Text>
+											<MixerVerticalIcon width={14} height={14} />
 										</IconButton>
 									</div>
 								</Table.ColumnHeaderCell>

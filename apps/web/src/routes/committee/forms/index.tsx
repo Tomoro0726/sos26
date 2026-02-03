@@ -1,4 +1,9 @@
-import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
+import {
+	ArrowUpIcon,
+	MagnifyingGlassIcon,
+	MixerVerticalIcon,
+	PlusIcon,
+} from "@radix-ui/react-icons";
 import {
 	Badge,
 	Button,
@@ -188,22 +193,94 @@ function CommitteeFormsPage() {
 						<Table.Header>
 							<Table.Row>
 								<Table.ColumnHeaderCell>
-									<Text>フォーム名</Text>
+									<div className={styles.headerCell}>
+										<Text>フォーム名</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
-									<Text>オーナー</Text>
+									<div className={styles.headerCell}>
+										<Text>オーナー</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
-									<Text>共有者</Text>
+									<div className={styles.headerCell}>
+										<Text>共有者</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
-									<Text>更新日</Text>
+									<div className={styles.headerCell}>
+										<Text>更新日</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
-									<Text>ステータス</Text>
+									<div className={styles.headerCell}>
+										<Text>ステータス</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>
-									<Text>承認者</Text>
+									<div className={styles.headerCell}>
+										<Text>承認者</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
 								</Table.ColumnHeaderCell>
 								<Table.ColumnHeaderCell>操作</Table.ColumnHeaderCell>
 							</Table.Row>
@@ -315,7 +392,7 @@ function CommitteeFormsPage() {
 			<Dialog.Root open={notificationOpen} onOpenChange={setNotificationOpen}>
 				<Dialog.Content style={{ maxWidth: 450 }}>
 					<Dialog.Title>フォーム送信完了</Dialog.Title>
-					<Dialog.Description asChild>
+					<Dialog.Description>
 						<div>
 							<Text>
 								「{selectedFormName}」をあなたの所属の責任者に承認を求めました。

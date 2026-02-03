@@ -1,6 +1,8 @@
 import {
+	ArrowUpIcon,
 	DownloadIcon,
 	MagnifyingGlassIcon,
+	MixerVerticalIcon,
 	TrashIcon,
 } from "@radix-ui/react-icons";
 import {
@@ -148,11 +150,66 @@ function CommitteeMembersPage() {
 					<Table.Root>
 						<Table.Header>
 							<Table.Row>
-								<Table.ColumnHeaderCell>名前</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>メール</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>ロール</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>参加日</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>操作</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>名前</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>メール</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>ロール</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>参加日</Text>
+										<IconButton variant="ghost" size="1" aria-label="ソート">
+											<ArrowUpIcon width={14} height={14} />
+										</IconButton>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
 							</Table.Row>
 						</Table.Header>
 

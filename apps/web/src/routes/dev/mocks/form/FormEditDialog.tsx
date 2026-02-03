@@ -75,9 +75,11 @@ export function FormEditDialog({
 		if (index > 0 && items[index - 1] && items[index]) {
 			const newItems = [...items];
 			const temp = newItems[index - 1];
-			newItems[index - 1] = newItems[index];
-			newItems[index] = temp;
-			setItems(newItems);
+			if (temp && newItems[index]) {
+				newItems[index - 1] = newItems[index];
+				newItems[index] = temp;
+				setItems(newItems);
+			}
 		}
 	};
 
@@ -85,9 +87,11 @@ export function FormEditDialog({
 		if (index < items.length - 1 && items[index] && items[index + 1]) {
 			const newItems = [...items];
 			const temp = newItems[index];
-			newItems[index] = newItems[index + 1];
-			newItems[index + 1] = temp;
-			setItems(newItems);
+			if (temp && newItems[index + 1]) {
+				newItems[index] = newItems[index + 1];
+				newItems[index + 1] = temp;
+				setItems(newItems);
+			}
 		}
 	};
 
