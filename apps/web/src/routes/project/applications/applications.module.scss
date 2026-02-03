@@ -1,0 +1,88 @@
+.container {
+	background-color: white;
+	border: 1px solid var(--gray-a6);
+	border-radius: var(--radius-3);
+	box-shadow: 0 1px 2px var(--gray-a2);
+	padding-top: 1px;
+}
+
+.topBar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+	padding: var(--space-5) 0;
+	margin-bottom: var(--space-3);
+}
+
+.searchArea {
+	flex-shrink: 0;
+	width: 280px;
+
+	:global(.rt-TextFieldRoot) {
+		width: 100%;
+	}
+}
+
+.headerCell {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	white-space: nowrap;
+	position: relative;
+}
+
+.creatorCell {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.creatorIcon {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
+	background-color: var(--gray-a2);
+	flex-shrink: 0;
+}
+
+/* テーブルのスタイル調整 */
+:global(.rt-TableRoot) {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+:global(.rt-TableHeader) {
+	background-color: var(--gray-1);
+	font-weight: 500;
+	overflow: visible;
+}
+
+:global(.rt-TableRow) {
+	border-bottom: 1px solid var(--gray-a4);
+	transition: background-color 0.15s ease;
+
+	&:hover {
+		background-color: var(--gray-a1);
+	}
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+:global(.rt-TableCell) {
+	padding: var(--space-3) var(--space-4);
+	vertical-align: middle;
+	overflow: visible !important;
+}
+
+:global(.rt-TableColumnHeaderCell) {
+	padding: var(--space-3) var(--space-4);
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--gray-11);
+	overflow: visible;
+	position: relative;
+}

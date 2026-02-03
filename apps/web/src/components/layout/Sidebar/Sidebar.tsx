@@ -38,16 +38,17 @@ export const projectMenuItems: MenuItem[] = [
 		notificationCount: 3,
 	},
 	{
+		label: "申請管理",
+		icon: <FileTextIcon />,
+		to: "/project/applications",
+		notificationCount: 3,
+		//isLocked: true,
+	},
+	{
 		label: "お知らせ",
 		icon: <BellIcon />,
 		to: "/project/announcements",
 		notificationCount: 12,
-	},
-	{
-		label: "申請管理",
-		icon: <FileTextIcon />,
-		to: "/project/applications",
-		isLocked: true,
 	},
 ];
 
