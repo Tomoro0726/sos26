@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { Button, Popover, Text } from "@radix-ui/themes";
+import { Button, Popover, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 import styles from "./ProjectSelector.module.scss";
 
@@ -27,13 +27,25 @@ export function ProjectSelector({
 	onSelectProject,
 }: ProjectSelectorProps) {
 	const [open, setOpen] = useState(false);
+	const [inviteCode, setInviteCode] = useState("");
 
 	const selectedProject =
 		dummyProjects.find(p => p.id === selectedProjectId) ?? dummyProjects[0];
 
+	if (!selectedProject) {
+		return null;
+	}
+
 	const handleSelect = (projectId: string) => {
 		onSelectProject?.(projectId);
 		setOpen(false);
+	};
+
+	const handleJoinProject = () => {
+		if (inviteCode.trim()) {
+			// TODO: 招待コードで企画に参加するAPI呼び出し
+			setInviteCode("");
+		}
 	};
 
 	if (collapsed) {
@@ -104,6 +116,26 @@ export function ProjectSelector({
 								<Text size="2">{project.name}</Text>
 							</button>
 						))}
+					</div>
+					<div className={styles.joinSection}>
+						<TextField.Root
+							placeholder="招待コードを入力"
+							value={inviteCode}
+							onChange={e => setInviteCode(e.target.value)}
+							onKeyDown={e => {
+								if (e.key === "Enter") {
+									handleJoinProject();
+								}
+							}}
+						/>
+						<Button
+							size="1"
+							onClick={handleJoinProject}
+							disabled={!inviteCode.trim()}
+							className={styles.joinButton}
+						>
+							参加
+						</Button>
 					</div>
 				</Popover.Content>
 			</Popover.Root>
