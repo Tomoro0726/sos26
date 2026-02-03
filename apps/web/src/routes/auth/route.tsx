@@ -12,7 +12,7 @@ function AuthLayout() {
 		<div className={styles.layout}>
 			<header className={styles.topNav}>
 				<div className={styles.logo}>
-					<img src="/sohosai.svg" alt="雙峰祭" height={32} />
+					<img src="/sohosai.svg" alt="雙峰祭" height={42} />
 				</div>
 				<nav className={styles.navLinks}>
 					<RadixLink
@@ -30,7 +30,7 @@ function AuthLayout() {
 						rel="noopener noreferrer"
 					>
 						<Text size="2">
-							サポート <ExternalLinkIcon />
+							サポートフォーム <ExternalLinkIcon />
 						</Text>
 					</RadixLink>
 				</nav>

@@ -1,5 +1,5 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { Button, Popover, Text, TextField } from "@radix-ui/themes";
+import { ChevronDownIcon, PlusIcon } from "@radix-ui/react-icons";
+import { Button, Popover, Separator, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 import styles from "./ProjectSelector.module.scss";
 
@@ -27,6 +27,7 @@ export function ProjectSelector({
 	onSelectProject,
 }: ProjectSelectorProps) {
 	const [open, setOpen] = useState(false);
+	const [showJoinInput, setShowJoinInput] = useState(false);
 	const [inviteCode, setInviteCode] = useState("");
 
 	const selectedProject =
@@ -39,13 +40,21 @@ export function ProjectSelector({
 	const handleSelect = (projectId: string) => {
 		onSelectProject?.(projectId);
 		setOpen(false);
+		setShowJoinInput(false);
 	};
 
 	const handleJoinProject = () => {
 		if (inviteCode.trim()) {
 			// TODO: 招待コードで企画に参加するAPI呼び出し
 			setInviteCode("");
+			setShowJoinInput(false);
+			setOpen(false);
 		}
+	};
+
+	const handleCreateProject = () => {
+		// TODO: 企画作成ダイアログを開く
+		setOpen(false);
 	};
 
 	if (collapsed) {
@@ -68,11 +77,7 @@ export function ProjectSelector({
 		<div className={styles.container}>
 			<Popover.Root open={open} onOpenChange={setOpen}>
 				<Popover.Trigger>
-					<Button
-						variant="ghost"
-						className={styles.button}
-						style={{ width: "100%" }}
-					>
+					<Button className={styles.button} variant="ghost">
 						<div className={styles.buttonContent}>
 							{selectedProject.icon && (
 								<img
@@ -81,61 +86,125 @@ export function ProjectSelector({
 									className={styles.projectIcon}
 								/>
 							)}
-							<div className={styles.projectName}>
-								<Text size="4" weight="medium" truncate>
-									{selectedProject.name}
-								</Text>
-							</div>
+							<Text className={styles.projectName} size="4" weight="bold">
+								{selectedProject.name}
+							</Text>
 							<ChevronDownIcon
-								width={16}
-								height={16}
 								className={`${styles.chevron} ${open ? styles.open : ""}`}
+								width="20"
+								height="20"
 							/>
 						</div>
 					</Button>
 				</Popover.Trigger>
 
-				<Popover.Content className={styles.popoverContent}>
-					<div className={styles.projectList}>
-						{dummyProjects.map(project => (
+				<Popover.Content
+					className={styles.popoverContent}
+					align="start"
+					sideOffset={4}
+				>
+					{/* プロジェクト一覧セクション */}
+					<div className={styles.section}>
+						<div className={styles.sectionLabel}>あなたの企画</div>
+						<div className={styles.projectList}>
+							{dummyProjects.map(project => (
+								<button
+									type="button"
+									key={project.id}
+									onClick={() => handleSelect(project.id)}
+									className={`${styles.projectItem} ${
+										project.id === selectedProjectId ? styles.active : ""
+									}`}
+								>
+									{project.icon && (
+										<img
+											src={project.icon}
+											alt={project.name}
+											className={styles.itemIcon}
+										/>
+									)}
+									<Text
+										size="2"
+										weight={
+											project.id === selectedProjectId ? "bold" : "regular"
+										}
+									>
+										{project.name}
+									</Text>
+								</button>
+							))}
+						</div>
+					</div>
+
+					<Separator size="4" className={styles.separator} />
+
+					{/* アクションセクション */}
+					<div className={styles.section}>
+						<button
+							type="button"
+							onClick={handleCreateProject}
+							className={styles.actionButton}
+						>
+							<div className={styles.actionIcon}>
+								<PlusIcon width="14" height="14" />
+							</div>
+							<Text size="2">新しい企画を作成</Text>
+						</button>
+
+						{!showJoinInput ? (
 							<button
 								type="button"
-								key={project.id}
-								className={`${styles.projectItem} ${
-									project.id === selectedProjectId ? styles.active : ""
-								}`}
-								onClick={() => handleSelect(project.id)}
+								onClick={() => setShowJoinInput(true)}
+								className={styles.actionButton}
 							>
-								{project.icon && (
-									<img
-										src={project.icon}
-										alt={project.name}
-										className={styles.itemIcon}
-									/>
-								)}
-								<Text size="2">{project.name}</Text>
+								<div className={styles.actionIcon}>
+									<Text size="1" weight="bold">
+										#
+									</Text>
+								</div>
+								<Text size="2">招待コードで参加</Text>
 							</button>
-						))}
-					</div>
-					<div className={styles.joinSection}>
-						<TextField.Root
-							placeholder="招待コードを入力"
-							value={inviteCode}
-							onChange={e => setInviteCode(e.target.value)}
-							onKeyDown={e => {
-								if (e.key === "Enter") {
-									handleJoinProject();
-								}
-							}}
-						/>
-						<Button
-							size="1"
-							onClick={handleJoinProject}
-							disabled={!inviteCode.trim()}
-							className={styles.joinButton}
-						>
-							参加
-						</Button>
+						) : (
+							<div className={styles.joinInputContainer}>
+								<TextField.Root
+									placeholder="招待コードを入力"
+									value={inviteCode}
+									onChange={e => setInviteCode(e.target.value)}
+									onKeyDown={e => {
+										if (e.key === "Enter") {
+											handleJoinProject();
+										} else if (e.key === "Escape") {
+											setShowJoinInput(false);
+											setInviteCode("");
+										}
+									}}
+									size="2"
+									autoFocus
+								/>
+								<div className={styles.joinActions}>
+									<Button
+										size="1"
+										type="button"
+										variant="ghost"
+										color="gray"
+										onClick={() => {
+											setShowJoinInput(false);
+											setInviteCode("");
+										}}
+									>
+										キャンセル
+									</Button>
+									<Button
+										size="1"
+										type="button"
+										onClick={handleJoinProject}
+										disabled={!inviteCode.trim()}
+									>
+										参加
+									</Button>
+								</div>
+							</div>
+						)}
 					</div>
 				</Popover.Content>
 			</Popover.Root>

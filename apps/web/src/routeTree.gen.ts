@@ -10,13 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectRouteRouteImport } from './routes/project/route'
+import { Route as CommitteeRouteRouteImport } from './routes/committee/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as ProjectIndexRouteImport } from './routes/project/index'
+import { Route as CommitteeIndexRouteImport } from './routes/committee/index'
 import { Route as ProjectMembersIndexRouteImport } from './routes/project/members/index'
 import { Route as ProjectApplicationsIndexRouteImport } from './routes/project/applications/index'
 import { Route as ProjectAnnouncementsIndexRouteImport } from './routes/project/announcements/index'
+import { Route as CommitteeMembersIndexRouteImport } from './routes/committee/members/index'
+import { Route as CommitteeMastersheetIndexRouteImport } from './routes/committee/mastersheet/index'
+import { Route as CommitteeFormsIndexRouteImport } from './routes/committee/forms/index'
+import { Route as CommitteeAnnouncementsIndexRouteImport } from './routes/committee/announcements/index'
 import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
@@ -27,6 +33,11 @@ import { Route as AuthRegisterSetupIndexRouteImport } from './routes/auth/regist
 const ProjectRouteRoute = ProjectRouteRouteImport.update({
   id: '/project',
   path: '/project',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommitteeRouteRoute = CommitteeRouteRouteImport.update({
+  id: '/committee',
+  path: '/committee',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -49,6 +60,11 @@ const ProjectIndexRoute = ProjectIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProjectRouteRoute,
 } as any)
+const CommitteeIndexRoute = CommitteeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CommitteeRouteRoute,
+} as any)
 const ProjectMembersIndexRoute = ProjectMembersIndexRouteImport.update({
   id: '/members/',
   path: '/members/',
@@ -65,6 +81,28 @@ const ProjectAnnouncementsIndexRoute =
     id: '/announcements/',
     path: '/announcements/',
     getParentRoute: () => ProjectRouteRoute,
+  } as any)
+const CommitteeMembersIndexRoute = CommitteeMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => CommitteeRouteRoute,
+} as any)
+const CommitteeMastersheetIndexRoute =
+  CommitteeMastersheetIndexRouteImport.update({
+    id: '/mastersheet/',
+    path: '/mastersheet/',
+    getParentRoute: () => CommitteeRouteRoute,
+  } as any)
+const CommitteeFormsIndexRoute = CommitteeFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
+  getParentRoute: () => CommitteeRouteRoute,
+} as any)
+const CommitteeAnnouncementsIndexRoute =
+  CommitteeAnnouncementsIndexRouteImport.update({
+    id: '/announcements/',
+    path: '/announcements/',
+    getParentRoute: () => CommitteeRouteRoute,
   } as any)
 const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
   id: '/reset-password/',
@@ -100,12 +138,18 @@ const AuthRegisterSetupIndexRoute = AuthRegisterSetupIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/committee': typeof CommitteeRouteRouteWithChildren
   '/project': typeof ProjectRouteRouteWithChildren
+  '/committee/': typeof CommitteeIndexRoute
   '/project/': typeof ProjectIndexRoute
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/committee/announcements': typeof CommitteeAnnouncementsIndexRoute
+  '/committee/forms': typeof CommitteeFormsIndexRoute
+  '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
+  '/committee/members': typeof CommitteeMembersIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/applications': typeof ProjectApplicationsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
@@ -116,11 +160,16 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/committee': typeof CommitteeIndexRoute
   '/project': typeof ProjectIndexRoute
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/committee/announcements': typeof CommitteeAnnouncementsIndexRoute
+  '/committee/forms': typeof CommitteeFormsIndexRoute
+  '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
+  '/committee/members': typeof CommitteeMembersIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/applications': typeof ProjectApplicationsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
@@ -132,12 +181,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/committee': typeof CommitteeRouteRouteWithChildren
   '/project': typeof ProjectRouteRouteWithChildren
+  '/committee/': typeof CommitteeIndexRoute
   '/project/': typeof ProjectIndexRoute
   '/search/': typeof SearchIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
   '/auth/reset-password/': typeof AuthResetPasswordIndexRoute
+  '/committee/announcements/': typeof CommitteeAnnouncementsIndexRoute
+  '/committee/forms/': typeof CommitteeFormsIndexRoute
+  '/committee/mastersheet/': typeof CommitteeMastersheetIndexRoute
+  '/committee/members/': typeof CommitteeMembersIndexRoute
   '/project/announcements/': typeof ProjectAnnouncementsIndexRoute
   '/project/applications/': typeof ProjectApplicationsIndexRoute
   '/project/members/': typeof ProjectMembersIndexRoute
@@ -150,12 +205,18 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/committee'
     | '/project'
+    | '/committee/'
     | '/project/'
     | '/search'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/committee/announcements'
+    | '/committee/forms'
+    | '/committee/mastersheet'
+    | '/committee/members'
     | '/project/announcements'
     | '/project/applications'
     | '/project/members'
@@ -166,11 +227,16 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/committee'
     | '/project'
     | '/search'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/committee/announcements'
+    | '/committee/forms'
+    | '/committee/mastersheet'
+    | '/committee/members'
     | '/project/announcements'
     | '/project/applications'
     | '/project/members'
@@ -181,12 +247,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/committee'
     | '/project'
+    | '/committee/'
     | '/project/'
     | '/search/'
     | '/auth/login/'
     | '/auth/register/'
     | '/auth/reset-password/'
+    | '/committee/announcements/'
+    | '/committee/forms/'
+    | '/committee/mastersheet/'
+    | '/committee/members/'
     | '/project/announcements/'
     | '/project/applications/'
     | '/project/members/'
@@ -198,6 +270,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  CommitteeRouteRoute: typeof CommitteeRouteRouteWithChildren
   ProjectRouteRoute: typeof ProjectRouteRouteWithChildren
   SearchIndexRoute: typeof SearchIndexRoute
   DevUiComponentsIndexRoute: typeof DevUiComponentsIndexRoute
@@ -210,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/project'
       fullPath: '/project'
       preLoaderRoute: typeof ProjectRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/committee': {
+      id: '/committee'
+      path: '/committee'
+      fullPath: '/committee'
+      preLoaderRoute: typeof CommitteeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -240,6 +320,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
     }
+    '/committee/': {
+      id: '/committee/'
+      path: '/'
+      fullPath: '/committee/'
+      preLoaderRoute: typeof CommitteeIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
+    }
     '/project/members/': {
       id: '/project/members/'
       path: '/members'
@@ -260,6 +347,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/project/announcements'
       preLoaderRoute: typeof ProjectAnnouncementsIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
+    }
+    '/committee/members/': {
+      id: '/committee/members/'
+      path: '/members'
+      fullPath: '/committee/members'
+      preLoaderRoute: typeof CommitteeMembersIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
+    }
+    '/committee/mastersheet/': {
+      id: '/committee/mastersheet/'
+      path: '/mastersheet'
+      fullPath: '/committee/mastersheet'
+      preLoaderRoute: typeof CommitteeMastersheetIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
+    }
+    '/committee/forms/': {
+      id: '/committee/forms/'
+      path: '/forms'
+      fullPath: '/committee/forms'
+      preLoaderRoute: typeof CommitteeFormsIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
+    }
+    '/committee/announcements/': {
+      id: '/committee/announcements/'
+      path: '/announcements'
+      fullPath: '/committee/announcements'
+      preLoaderRoute: typeof CommitteeAnnouncementsIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
     }
     '/auth/reset-password/': {
       id: '/auth/reset-password/'
@@ -326,6 +441,26 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface CommitteeRouteRouteChildren {
+  CommitteeIndexRoute: typeof CommitteeIndexRoute
+  CommitteeAnnouncementsIndexRoute: typeof CommitteeAnnouncementsIndexRoute
+  CommitteeFormsIndexRoute: typeof CommitteeFormsIndexRoute
+  CommitteeMastersheetIndexRoute: typeof CommitteeMastersheetIndexRoute
+  CommitteeMembersIndexRoute: typeof CommitteeMembersIndexRoute
+}
+
+const CommitteeRouteRouteChildren: CommitteeRouteRouteChildren = {
+  CommitteeIndexRoute: CommitteeIndexRoute,
+  CommitteeAnnouncementsIndexRoute: CommitteeAnnouncementsIndexRoute,
+  CommitteeFormsIndexRoute: CommitteeFormsIndexRoute,
+  CommitteeMastersheetIndexRoute: CommitteeMastersheetIndexRoute,
+  CommitteeMembersIndexRoute: CommitteeMembersIndexRoute,
+}
+
+const CommitteeRouteRouteWithChildren = CommitteeRouteRoute._addFileChildren(
+  CommitteeRouteRouteChildren,
+)
+
 interface ProjectRouteRouteChildren {
   ProjectIndexRoute: typeof ProjectIndexRoute
   ProjectAnnouncementsIndexRoute: typeof ProjectAnnouncementsIndexRoute
@@ -347,6 +482,7 @@ const ProjectRouteRouteWithChildren = ProjectRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  CommitteeRouteRoute: CommitteeRouteRouteWithChildren,
   ProjectRouteRoute: ProjectRouteRouteWithChildren,
   SearchIndexRoute: SearchIndexRoute,
   DevUiComponentsIndexRoute: DevUiComponentsIndexRoute,

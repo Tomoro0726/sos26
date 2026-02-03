@@ -29,6 +29,7 @@ type SidebarProps = {
 	onToggle: () => void;
 	menuItems: MenuItem[];
 	commonItems?: MenuItem[];
+	hideProjectSelector?: boolean;
 };
 
 export const projectMenuItems: MenuItem[] = [
@@ -53,6 +54,32 @@ export const projectMenuItems: MenuItem[] = [
 	},
 ];
 
+export const committeeMenuItems: MenuItem[] = [
+	{
+		label: "メンバー管理",
+		icon: <PersonIcon />,
+		to: "/committee/members",
+		notificationCount: 2,
+	},
+	{
+		label: "マスターシート",
+		icon: <FileTextIcon />,
+		to: "/committee/mastersheet",
+	},
+	{
+		label: "フォーム",
+		icon: <FileTextIcon />,
+		to: "/committee/forms",
+		notificationCount: 5,
+	},
+	{
+		label: "お知らせ",
+		icon: <BellIcon />,
+		to: "/committee/announcements",
+		notificationCount: 8,
+	},
+];
+
 export const commonMenuItems: MenuItem[] = [
 	{ label: "設定", icon: <GearIcon />, to: "/settings" },
 	{
@@ -69,11 +96,28 @@ export const commonMenuItems: MenuItem[] = [
 	{ label: "ログアウト", icon: <ExitIcon />, to: "/auth/logout" },
 ];
 
+export const committeeCommonMenuItems: MenuItem[] = [
+	{ label: "設定", icon: <GearIcon />, to: "/settings" },
+	{
+		label: "説明書",
+		icon: <QuestionMarkCircledIcon />,
+		to: "https://docs.sohosai.com",
+	},
+	{
+		label: "不具合報告",
+		icon: <LinkBreak2Icon />,
+		to: "https://forms.sohosai.com/support",
+	},
+	{ label: "企画人に切り替え", icon: <SwitchIcon />, to: "/project" },
+	{ label: "ログアウト", icon: <ExitIcon />, to: "/auth/logout" },
+];
+
 export function Sidebar({
 	collapsed,
 	onToggle,
 	menuItems,
 	commonItems = commonMenuItems,
+	hideProjectSelector = false,
 }: SidebarProps) {
 	const router = useRouterState();
 	const currentPath = router.location.pathname;
@@ -152,12 +196,12 @@ export function Sidebar({
 				</IconButton>
 				{!collapsed && (
 					<div className={styles.logoContainer}>
-						<img src="/sohosai.svg" alt="雙峰祭" height={24} />
+						<img src="/sohosai.svg" alt="雙峰祭" height={42} />
 					</div>
 				)}
 			</div>
 
-			<ProjectSelector collapsed={collapsed} />
+			{!hideProjectSelector && <ProjectSelector collapsed={collapsed} />}
 
 			<nav className={styles.nav}>{menuItems.map(renderMenuItem)}</nav>
 
