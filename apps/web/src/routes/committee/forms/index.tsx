@@ -2,13 +2,20 @@ import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
 import {
 	Badge,
 	Button,
+	Dialog,
 	DropdownMenu,
+	Heading,
 	IconButton,
 	Table,
 	Text,
 	TextField,
 } from "@radix-ui/themes";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+	FormEditDialog,
+	type Form as FormModel,
+} from "@/routes/dev/mocks/form/FormEditDialog";
 import styles from "./forms.module.scss";
 
 export const Route = createFileRoute("/committee/forms/")({
@@ -94,18 +101,70 @@ function getStatusColor(
 }
 
 function CommitteeFormsPage() {
+	const [notificationOpen, setNotificationOpen] = useState(false);
+	const [selectedFormName, setSelectedFormName] = useState("");
+	const [editingForm, setEditingForm] = useState<FormModel | null>(null);
+	const [isCreatingNew, setIsCreatingNew] = useState(false);
+
+	const handleSubmit = (formName: string) => {
+		setSelectedFormName(formName);
+		setNotificationOpen(true);
+	};
+
+	const handleEdit = (form: Form) => {
+		const editForm: FormModel = {
+			id: form.id,
+			name: form.name,
+			items: [
+				{
+					id: "item-1",
+					label: "名前",
+					type: "text",
+					required: true,
+				},
+				{
+					id: "item-2",
+					label: "メール",
+					type: "text",
+					required: true,
+				},
+				{
+					id: "item-3",
+					label: "部署",
+					type: "select",
+					required: false,
+					options: ["企画部", "財務部", "広報部"],
+				},
+				{
+					id: "item-4",
+					label: "備考",
+					type: "textarea",
+					required: false,
+				},
+			],
+		};
+		setEditingForm(editForm);
+		setIsCreatingNew(false);
+	};
+
+	const handleCreateNew = () => {
+		const newForm: FormModel = {
+			id: `form-${Date.now()}`,
+			name: "新しいフォーム",
+			items: [],
+		};
+		setEditingForm(newForm);
+		setIsCreatingNew(true);
+	};
+
 	return (
 		<>
 			<div className={styles.page}>
 				<div className={styles.pageHeader}>
-					<div>
-						<Text as="h1" size="7" weight="bold">
-							フォーム
-						</Text>
-						<Text as="p" size="3" color="gray">
-							企画に関するフォームを管理します
-						</Text>
-					</div>
+					<Heading size="6">フォーム</Heading>
+					<Text size="2" color="gray" mt="2">
+						企画に関するフォームを管理します
+					</Text>
 				</div>
 
 				<div className={styles.topBar}>
@@ -117,7 +176,7 @@ function CommitteeFormsPage() {
 						</TextField.Root>
 					</div>
 					<div className={styles.actionButtons}>
-						<Button>
+						<Button onClick={handleCreateNew}>
 							<PlusIcon width={16} height={16} />
 							新しいフォームを作成
 						</Button>
@@ -234,9 +293,15 @@ function CommitteeFormsPage() {
 												</IconButton>
 											</DropdownMenu.Trigger>
 											<DropdownMenu.Content>
-												<DropdownMenu.Item>編集</DropdownMenu.Item>
+												<DropdownMenu.Item onClick={() => handleEdit(form)}>
+													編集
+												</DropdownMenu.Item>
 												<DropdownMenu.Item>結果を見る</DropdownMenu.Item>
-												<DropdownMenu.Item>送信する</DropdownMenu.Item>
+												<DropdownMenu.Item
+													onClick={() => handleSubmit(form.name)}
+												>
+													送信する
+												</DropdownMenu.Item>
 											</DropdownMenu.Content>
 										</DropdownMenu.Root>
 									</Table.Cell>
@@ -246,6 +311,33 @@ function CommitteeFormsPage() {
 					</Table.Root>
 				</div>
 			</div>
+
+			<Dialog.Root open={notificationOpen} onOpenChange={setNotificationOpen}>
+				<Dialog.Content style={{ maxWidth: 450 }}>
+					<Dialog.Title>フォーム送信完了</Dialog.Title>
+					<Dialog.Description asChild>
+						<div>
+							<Text>
+								「{selectedFormName}」をあなたの所属の責任者に承認を求めました。
+							</Text>
+						</div>
+					</Dialog.Description>
+					<div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+						<Dialog.Close>
+							<Button>OK</Button>
+						</Dialog.Close>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
+			<FormEditDialog
+				open={!!editingForm}
+				onOpenChange={(open: boolean) => {
+					if (!open) setEditingForm(null);
+				}}
+				form={editingForm}
+				isNewForm={isCreatingNew}
+			/>
 		</>
 	);
 }

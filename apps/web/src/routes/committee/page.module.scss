@@ -1,10 +1,16 @@
 .page {
 	flex: 1;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
 	padding: var(--space-6);
-	background: linear-gradient(135deg, var(--gray-2) 0%, var(--gray-1) 100%);
+}
+
+.content {
+	flex: 1;
+}
+
+.pageHeader {
+	margin-bottom: var(--space-6);
 }
 
 .container {

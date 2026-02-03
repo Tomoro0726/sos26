@@ -19,6 +19,7 @@ import { Route as CommitteeIndexRouteImport } from './routes/committee/index'
 import { Route as ProjectMembersIndexRouteImport } from './routes/project/members/index'
 import { Route as ProjectApplicationsIndexRouteImport } from './routes/project/applications/index'
 import { Route as ProjectAnnouncementsIndexRouteImport } from './routes/project/announcements/index'
+import { Route as CommitteeNoticeIndexRouteImport } from './routes/committee/notice/index'
 import { Route as CommitteeMembersIndexRouteImport } from './routes/committee/members/index'
 import { Route as CommitteeMastersheetIndexRouteImport } from './routes/committee/mastersheet/index'
 import { Route as CommitteeFormsIndexRouteImport } from './routes/committee/forms/index'
@@ -82,6 +83,11 @@ const ProjectAnnouncementsIndexRoute =
     path: '/announcements/',
     getParentRoute: () => ProjectRouteRoute,
   } as any)
+const CommitteeNoticeIndexRoute = CommitteeNoticeIndexRouteImport.update({
+  id: '/notice/',
+  path: '/notice/',
+  getParentRoute: () => CommitteeRouteRoute,
+} as any)
 const CommitteeMembersIndexRoute = CommitteeMembersIndexRouteImport.update({
   id: '/members/',
   path: '/members/',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/committee/forms': typeof CommitteeFormsIndexRoute
   '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
   '/committee/members': typeof CommitteeMembersIndexRoute
+  '/committee/notice': typeof CommitteeNoticeIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/applications': typeof ProjectApplicationsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/committee/forms': typeof CommitteeFormsIndexRoute
   '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
   '/committee/members': typeof CommitteeMembersIndexRoute
+  '/committee/notice': typeof CommitteeNoticeIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/applications': typeof ProjectApplicationsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/committee/forms/': typeof CommitteeFormsIndexRoute
   '/committee/mastersheet/': typeof CommitteeMastersheetIndexRoute
   '/committee/members/': typeof CommitteeMembersIndexRoute
+  '/committee/notice/': typeof CommitteeNoticeIndexRoute
   '/project/announcements/': typeof ProjectAnnouncementsIndexRoute
   '/project/applications/': typeof ProjectApplicationsIndexRoute
   '/project/members/': typeof ProjectMembersIndexRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/committee/forms'
     | '/committee/mastersheet'
     | '/committee/members'
+    | '/committee/notice'
     | '/project/announcements'
     | '/project/applications'
     | '/project/members'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/committee/forms'
     | '/committee/mastersheet'
     | '/committee/members'
+    | '/committee/notice'
     | '/project/announcements'
     | '/project/applications'
     | '/project/members'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/committee/forms/'
     | '/committee/mastersheet/'
     | '/committee/members/'
+    | '/committee/notice/'
     | '/project/announcements/'
     | '/project/applications/'
     | '/project/members/'
@@ -347,6 +359,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/project/announcements'
       preLoaderRoute: typeof ProjectAnnouncementsIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
+    }
+    '/committee/notice/': {
+      id: '/committee/notice/'
+      path: '/notice'
+      fullPath: '/committee/notice'
+      preLoaderRoute: typeof CommitteeNoticeIndexRouteImport
+      parentRoute: typeof CommitteeRouteRoute
     }
     '/committee/members/': {
       id: '/committee/members/'
@@ -447,6 +466,7 @@ interface CommitteeRouteRouteChildren {
   CommitteeFormsIndexRoute: typeof CommitteeFormsIndexRoute
   CommitteeMastersheetIndexRoute: typeof CommitteeMastersheetIndexRoute
   CommitteeMembersIndexRoute: typeof CommitteeMembersIndexRoute
+  CommitteeNoticeIndexRoute: typeof CommitteeNoticeIndexRoute
 }
 
 const CommitteeRouteRouteChildren: CommitteeRouteRouteChildren = {
@@ -455,6 +475,7 @@ const CommitteeRouteRouteChildren: CommitteeRouteRouteChildren = {
   CommitteeFormsIndexRoute: CommitteeFormsIndexRoute,
   CommitteeMastersheetIndexRoute: CommitteeMastersheetIndexRoute,
   CommitteeMembersIndexRoute: CommitteeMembersIndexRoute,
+  CommitteeNoticeIndexRoute: CommitteeNoticeIndexRoute,
 }
 
 const CommitteeRouteRouteWithChildren = CommitteeRouteRoute._addFileChildren(

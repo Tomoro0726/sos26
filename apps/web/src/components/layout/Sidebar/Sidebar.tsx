@@ -75,7 +75,7 @@ export const committeeMenuItems: MenuItem[] = [
 	{
 		label: "お知らせ",
 		icon: <BellIcon />,
-		to: "/committee/announcements",
+		to: "/committee/notice",
 		notificationCount: 8,
 	},
 ];
