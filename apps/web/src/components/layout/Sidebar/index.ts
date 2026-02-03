@@ -1,2 +1,2 @@
 export type { MenuItem } from "./Sidebar";
-export { projectMenuItems, Sidebar } from "./Sidebar";
+export { commonMenuItems, projectMenuItems, Sidebar } from "./Sidebar";

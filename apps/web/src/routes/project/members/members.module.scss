@@ -1,0 +1,175 @@
+.container {
+	background-color: white;
+	border: 1px solid var(--gray-a6);
+	border-radius: var(--radius-3);
+	box-shadow: 0 1px 2px var(--gray-a2);
+	padding-top: 1px;
+}
+
+.filterInfo {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-3) var(--space-4);
+	background-color: var(--blue-a2);
+	border-bottom: 1px solid var(--blue-a4);
+	gap: var(--space-3);
+}
+
+.headerCell {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	white-space: nowrap;
+	position: relative;
+}
+
+.filterButton {
+	opacity: 0.5;
+	transition: opacity 0.15s ease;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.filterMenu {
+	position: absolute;
+	top: calc(100% + var(--space-1));
+	left: 0;
+	z-index: 1000;
+	background-color: white;
+	border: 1px solid var(--gray-a6);
+	border-radius: var(--radius-2);
+	box-shadow: 0 4px 12px var(--gray-a5);
+	min-width: 200px;
+	overflow: visible;
+	display: flex;
+	flex-direction: column;
+}
+
+.filterHeader {
+	padding: var(--space-2);
+	border-bottom: 1px solid var(--gray-a4);
+	flex-shrink: 0;
+
+	:global(.rt-TextFieldRoot) {
+		width: 100%;
+
+		input {
+			font-size: 13px;
+			padding: var(--space-2) var(--space-2);
+		}
+	}
+}
+
+.filterOptions {
+	flex: 1;
+	max-height: 280px;
+	overflow-y: auto;
+	padding: var(--space-2) 0;
+}
+
+.filterCheckbox {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: var(--space-2) var(--space-3);
+	cursor: pointer;
+	font-size: 13px;
+	color: var(--gray-11);
+	transition: background-color 0.1s ease;
+	user-select: none;
+
+	&:hover {
+		background-color: var(--gray-a2);
+	}
+
+	input[type="checkbox"] {
+		cursor: pointer;
+		margin: 0;
+	}
+}
+
+.filterOption {
+	display: block;
+	width: 100%;
+	padding: var(--space-2) var(--space-3);
+	border: none;
+	background: none;
+	text-align: left;
+	cursor: pointer;
+	font-size: 14px;
+	color: var(--gray-11);
+	transition: background-color 0.1s ease;
+
+	&:hover {
+		background-color: var(--gray-a2);
+	}
+
+	&.selected {
+		background-color: var(--accent-a3);
+		color: var(--accent-11);
+		font-weight: 500;
+	}
+}
+
+.clearFilterButton {
+	padding: var(--space-2) var(--space-3);
+	border: none;
+	border-top: 1px solid var(--gray-a4);
+	background: none;
+	color: var(--gray-11);
+	font-size: 12px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: var(--space-1);
+	transition: background-color 0.1s ease;
+	flex-shrink: 0;
+
+	&:hover {
+		background-color: var(--red-a2);
+		color: var(--red-11);
+	}
+}
+
+/* テーブルのスタイル調整 */
+:global(.rt-TableRoot) {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+:global(.rt-TableHeader) {
+	background-color: var(--gray-1);
+	font-weight: 500;
+	overflow: visible;
+}
+
+:global(.rt-TableRow) {
+	border-bottom: 1px solid var(--gray-a4);
+	transition: background-color 0.15s ease;
+
+	&:hover {
+		background-color: var(--gray-a1);
+	}
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+:global(.rt-TableCell) {
+	padding: var(--space-3) var(--space-4);
+	vertical-align: middle;
+	overflow: visible !important;
+}
+
+:global(.rt-TableColumnHeaderCell) {
+	padding: var(--space-3) var(--space-4);
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--gray-11);
+	overflow: visible;
+	position: relative;
+}

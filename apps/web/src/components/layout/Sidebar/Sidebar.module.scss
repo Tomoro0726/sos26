@@ -5,7 +5,10 @@
 	min-height: 100vh;
 	background-color: var(--gray-1);
 	border-right: 1px solid var(--gray-a5);
-	transition: width 0.2s ease;
+	transition:
+		width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	overflow: hidden;
 }
 
 .collapsed {
@@ -20,11 +23,18 @@
 	padding: var(--space-4);
 	border-bottom: 1px solid var(--gray-a5);
 	min-height: 64px;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logoContainer {
 	display: flex;
 	align-items: center;
+	overflow: hidden;
+	transition:
+		opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transform: translateX(0);
+	opacity: 1;
 }
 
 .nav {
@@ -33,6 +43,12 @@
 	flex-direction: column;
 	gap: var(--space-1);
 	padding: var(--space-3);
+}
+
+.navLink {
+	text-decoration: none;
+	color: inherit;
+	display: block;
 }
 
 .navItem {
@@ -44,11 +60,15 @@
 	text-decoration: none;
 	color: var(--gray-11);
 	transition:
-		background-color 0.15s ease,
-		color 0.15s ease;
+		background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+		color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+		padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		justify-content 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
 	&:hover {
-		background-color: var(--gray-a3);
+		background-color: var(--gray-a4);
+		box-shadow: 0 1px 3px var(--gray-a3);
 	}
 }
 
@@ -75,9 +95,54 @@
 	}
 }
 
+.iconContainer {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.badge {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	background-color: var(--red-9);
+	border-radius: 50%;
+	width: 8px;
+	height: 8px;
+	box-shadow: 0 0 0 1px var(--gray-1);
+}
+
+.lockIcon {
+	width: 12px;
+	height: 12px;
+	color: var(--gray-9);
+	flex-shrink: 0;
+	margin-left: auto;
+}
+
+.locked {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.commonNav {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	padding: var(--space-3);
+	border-top: 1px solid var(--gray-a5);
+	margin-top: auto;
+}
+
 .label {
 	white-space: nowrap;
 	overflow: hidden;
+	transition:
+		opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transform: translateX(0);
+	opacity: 1;
 }
 
 // 折りたたみ時のスタイル調整
@@ -88,4 +153,14 @@
 
 .collapsed .header {
 	justify-content: center;
+}
+
+.collapsed .logoContainer {
+	opacity: 0;
+	transform: translateX(-20px);
+}
+
+.collapsed .label {
+	opacity: 0;
+	transform: translateX(-20px);
 }
