@@ -14,25 +14,17 @@ import {
 	TextField,
 } from "@radix-ui/themes";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+	type Application,
+	ApplicationFormDialog,
+} from "@/routes/dev/mocks/ApplicationFormDialog";
 import styles from "../page.module.scss";
 import applicationsStyles from "./applications.module.scss";
 
 export const Route = createFileRoute("/project/applications/")({
 	component: ApplicationsPage,
 });
-
-type Application = {
-	id: string;
-	title: string;
-	department: string;
-	createdBy: {
-		name: string;
-		id: string;
-	};
-	deliveredAt: string;
-	dueAt: string;
-	status: "下書き中" | "完了" | "未記入";
-};
 
 const dummyApplications: Application[] = [
 	{
@@ -111,6 +103,9 @@ function getStatusBadgeColor(
 }
 
 function ApplicationsPage() {
+	const [selectedApplication, setSelectedApplication] =
+		useState<Application | null>(null);
+
 	return (
 		<>
 			<div className={styles.page}>
@@ -267,7 +262,11 @@ function ApplicationsPage() {
 									<Table.Cell>
 										{(application.status === "未記入" ||
 											application.status === "下書き中") && (
-											<Button size="1" variant="outline">
+											<Button
+												size="1"
+												variant="outline"
+												onClick={() => setSelectedApplication(application)}
+											>
 												<PlayIcon width={14} height={14} />
 												回答する
 											</Button>
@@ -279,6 +278,15 @@ function ApplicationsPage() {
 					</Table.Root>
 				</div>
 			</div>
+
+			{/* フォーム回答ダイアログ */}
+			<ApplicationFormDialog
+				open={!!selectedApplication}
+				onOpenChange={open => {
+					if (!open) setSelectedApplication(null);
+				}}
+				application={selectedApplication}
+			/>
 		</>
 	);
 }
