@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
@@ -18,6 +19,11 @@ import { Route as DevUiComponentsIndexRouteImport } from './routes/dev/ui/compon
 import { Route as AuthRegisterVerifyIndexRouteImport } from './routes/auth/register/verify/index'
 import { Route as AuthRegisterSetupIndexRouteImport } from './routes/auth/register/setup/index'
 
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -29,19 +35,19 @@ const SearchIndexRoute = SearchIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
-  id: '/auth/reset-password/',
-  path: '/auth/reset-password/',
-  getParentRoute: () => rootRouteImport,
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
-  id: '/auth/register/',
-  path: '/auth/register/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
-  id: '/auth/login/',
-  path: '/auth/login/',
-  getParentRoute: () => rootRouteImport,
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const DevUiComponentsIndexRoute = DevUiComponentsIndexRouteImport.update({
   id: '/dev/ui/components/',
@@ -49,18 +55,19 @@ const DevUiComponentsIndexRoute = DevUiComponentsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterVerifyIndexRoute = AuthRegisterVerifyIndexRouteImport.update({
-  id: '/auth/register/verify/',
-  path: '/auth/register/verify/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/verify/',
+  path: '/register/verify/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterSetupIndexRoute = AuthRegisterSetupIndexRouteImport.update({
-  id: '/auth/register/setup/',
-  path: '/auth/register/setup/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/setup/',
+  path: '/register/setup/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/search/': typeof SearchIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/search'
     | '/auth/login'
     | '/auth/register'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/search'
     | '/auth/login'
     | '/auth/register'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/search/'
     | '/auth/login/'
     | '/auth/register/'
@@ -125,17 +137,20 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   SearchIndexRoute: typeof SearchIndexRoute
-  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
-  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
-  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
-  AuthRegisterSetupIndexRoute: typeof AuthRegisterSetupIndexRoute
-  AuthRegisterVerifyIndexRoute: typeof AuthRegisterVerifyIndexRoute
   DevUiComponentsIndexRoute: typeof DevUiComponentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -152,24 +167,24 @@ declare module '@tanstack/react-router' {
     }
     '/auth/reset-password/': {
       id: '/auth/reset-password/'
-      path: '/auth/reset-password'
+      path: '/reset-password'
       fullPath: '/auth/reset-password'
       preLoaderRoute: typeof AuthResetPasswordIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/register/': {
       id: '/auth/register/'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/login/': {
       id: '/auth/login/'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/dev/ui/components/': {
       id: '/dev/ui/components/'
@@ -180,29 +195,45 @@ declare module '@tanstack/react-router' {
     }
     '/auth/register/verify/': {
       id: '/auth/register/verify/'
-      path: '/auth/register/verify'
+      path: '/register/verify'
       fullPath: '/auth/register/verify'
       preLoaderRoute: typeof AuthRegisterVerifyIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/register/setup/': {
       id: '/auth/register/setup/'
-      path: '/auth/register/setup'
+      path: '/register/setup'
       fullPath: '/auth/register/setup'
       preLoaderRoute: typeof AuthRegisterSetupIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SearchIndexRoute: SearchIndexRoute,
+interface AuthRouteRouteChildren {
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
+  AuthRegisterSetupIndexRoute: typeof AuthRegisterSetupIndexRoute
+  AuthRegisterVerifyIndexRoute: typeof AuthRegisterVerifyIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
   AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
   AuthRegisterSetupIndexRoute: AuthRegisterSetupIndexRoute,
   AuthRegisterVerifyIndexRoute: AuthRegisterVerifyIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  SearchIndexRoute: SearchIndexRoute,
   DevUiComponentsIndexRoute: DevUiComponentsIndexRoute,
 }
 export const routeTree = rootRouteImport

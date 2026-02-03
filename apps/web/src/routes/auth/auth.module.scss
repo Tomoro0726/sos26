@@ -1,3 +1,39 @@
+// Auth layout styles
+.layout {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.topNav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: var(--space-3) var(--space-5);
+	border-bottom: 1px solid var(--gray-a5);
+}
+
+.navLinks {
+	display: flex;
+	gap: var(--space-4);
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
+	}
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+}
+
+.main {
+	flex: 1;
+}
+
+// Auth page content styles
 .container {
 	display: flex;
 	flex-direction: column;
