@@ -1,0 +1,91 @@
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	width: 240px;
+	min-height: 100vh;
+	background-color: var(--gray-1);
+	border-right: 1px solid var(--gray-a5);
+	transition: width 0.2s ease;
+}
+
+.collapsed {
+	width: 64px;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: var(--space-3);
+	padding: var(--space-4);
+	border-bottom: 1px solid var(--gray-a5);
+	min-height: 64px;
+}
+
+.logoContainer {
+	display: flex;
+	align-items: center;
+}
+
+.nav {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	padding: var(--space-3);
+}
+
+.navItem {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding: var(--space-2) var(--space-3);
+	border-radius: var(--radius-2);
+	text-decoration: none;
+	color: var(--gray-11);
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
+
+	&:hover {
+		background-color: var(--gray-a3);
+	}
+}
+
+.active {
+	background-color: var(--accent-a3);
+	color: var(--accent-11);
+
+	&:hover {
+		background-color: var(--accent-a4);
+	}
+}
+
+.icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.label {
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+// 折りたたみ時のスタイル調整
+.collapsed .navItem {
+	justify-content: center;
+	padding: var(--space-2);
+}
+
+.collapsed .header {
+	justify-content: center;
+}

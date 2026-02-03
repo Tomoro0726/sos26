@@ -9,9 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProjectRouteRouteImport } from './routes/project/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
+import { Route as ProjectIndexRouteImport } from './routes/project/index'
+import { Route as ProjectMembersIndexRouteImport } from './routes/project/members/index'
+import { Route as ProjectApplicationsIndexRouteImport } from './routes/project/applications/index'
+import { Route as ProjectAnnouncementsIndexRouteImport } from './routes/project/announcements/index'
 import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
@@ -19,6 +24,11 @@ import { Route as DevUiComponentsIndexRouteImport } from './routes/dev/ui/compon
 import { Route as AuthRegisterVerifyIndexRouteImport } from './routes/auth/register/verify/index'
 import { Route as AuthRegisterSetupIndexRouteImport } from './routes/auth/register/setup/index'
 
+const ProjectRouteRoute = ProjectRouteRouteImport.update({
+  id: '/project',
+  path: '/project',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -34,6 +44,28 @@ const SearchIndexRoute = SearchIndexRouteImport.update({
   path: '/search/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectIndexRoute = ProjectIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProjectRouteRoute,
+} as any)
+const ProjectMembersIndexRoute = ProjectMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => ProjectRouteRoute,
+} as any)
+const ProjectApplicationsIndexRoute =
+  ProjectApplicationsIndexRouteImport.update({
+    id: '/applications/',
+    path: '/applications/',
+    getParentRoute: () => ProjectRouteRoute,
+  } as any)
+const ProjectAnnouncementsIndexRoute =
+  ProjectAnnouncementsIndexRouteImport.update({
+    id: '/announcements/',
+    path: '/announcements/',
+    getParentRoute: () => ProjectRouteRoute,
+  } as any)
 const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
   id: '/reset-password/',
   path: '/reset-password/',
@@ -68,10 +100,15 @@ const AuthRegisterSetupIndexRoute = AuthRegisterSetupIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/project': typeof ProjectRouteRouteWithChildren
+  '/project/': typeof ProjectIndexRoute
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/project/announcements': typeof ProjectAnnouncementsIndexRoute
+  '/project/applications': typeof ProjectApplicationsIndexRoute
+  '/project/members': typeof ProjectMembersIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components': typeof DevUiComponentsIndexRoute
@@ -79,10 +116,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/project': typeof ProjectIndexRoute
   '/search': typeof SearchIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/project/announcements': typeof ProjectAnnouncementsIndexRoute
+  '/project/applications': typeof ProjectApplicationsIndexRoute
+  '/project/members': typeof ProjectMembersIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components': typeof DevUiComponentsIndexRoute
@@ -91,10 +132,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/project': typeof ProjectRouteRouteWithChildren
+  '/project/': typeof ProjectIndexRoute
   '/search/': typeof SearchIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
   '/auth/reset-password/': typeof AuthResetPasswordIndexRoute
+  '/project/announcements/': typeof ProjectAnnouncementsIndexRoute
+  '/project/applications/': typeof ProjectApplicationsIndexRoute
+  '/project/members/': typeof ProjectMembersIndexRoute
   '/auth/register/setup/': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify/': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components/': typeof DevUiComponentsIndexRoute
@@ -104,10 +150,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/project'
+    | '/project/'
     | '/search'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/project/announcements'
+    | '/project/applications'
+    | '/project/members'
     | '/auth/register/setup'
     | '/auth/register/verify'
     | '/dev/ui/components'
@@ -115,10 +166,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/project'
     | '/search'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/project/announcements'
+    | '/project/applications'
+    | '/project/members'
     | '/auth/register/setup'
     | '/auth/register/verify'
     | '/dev/ui/components'
@@ -126,10 +181,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/project'
+    | '/project/'
     | '/search/'
     | '/auth/login/'
     | '/auth/register/'
     | '/auth/reset-password/'
+    | '/project/announcements/'
+    | '/project/applications/'
+    | '/project/members/'
     | '/auth/register/setup/'
     | '/auth/register/verify/'
     | '/dev/ui/components/'
@@ -138,12 +198,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  ProjectRouteRoute: typeof ProjectRouteRouteWithChildren
   SearchIndexRoute: typeof SearchIndexRoute
   DevUiComponentsIndexRoute: typeof DevUiComponentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/project': {
+      id: '/project'
+      path: '/project'
+      fullPath: '/project'
+      preLoaderRoute: typeof ProjectRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -164,6 +232,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/search'
       preLoaderRoute: typeof SearchIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/project/': {
+      id: '/project/'
+      path: '/'
+      fullPath: '/project/'
+      preLoaderRoute: typeof ProjectIndexRouteImport
+      parentRoute: typeof ProjectRouteRoute
+    }
+    '/project/members/': {
+      id: '/project/members/'
+      path: '/members'
+      fullPath: '/project/members'
+      preLoaderRoute: typeof ProjectMembersIndexRouteImport
+      parentRoute: typeof ProjectRouteRoute
+    }
+    '/project/applications/': {
+      id: '/project/applications/'
+      path: '/applications'
+      fullPath: '/project/applications'
+      preLoaderRoute: typeof ProjectApplicationsIndexRouteImport
+      parentRoute: typeof ProjectRouteRoute
+    }
+    '/project/announcements/': {
+      id: '/project/announcements/'
+      path: '/announcements'
+      fullPath: '/project/announcements'
+      preLoaderRoute: typeof ProjectAnnouncementsIndexRouteImport
+      parentRoute: typeof ProjectRouteRoute
     }
     '/auth/reset-password/': {
       id: '/auth/reset-password/'
@@ -230,9 +326,28 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface ProjectRouteRouteChildren {
+  ProjectIndexRoute: typeof ProjectIndexRoute
+  ProjectAnnouncementsIndexRoute: typeof ProjectAnnouncementsIndexRoute
+  ProjectApplicationsIndexRoute: typeof ProjectApplicationsIndexRoute
+  ProjectMembersIndexRoute: typeof ProjectMembersIndexRoute
+}
+
+const ProjectRouteRouteChildren: ProjectRouteRouteChildren = {
+  ProjectIndexRoute: ProjectIndexRoute,
+  ProjectAnnouncementsIndexRoute: ProjectAnnouncementsIndexRoute,
+  ProjectApplicationsIndexRoute: ProjectApplicationsIndexRoute,
+  ProjectMembersIndexRoute: ProjectMembersIndexRoute,
+}
+
+const ProjectRouteRouteWithChildren = ProjectRouteRoute._addFileChildren(
+  ProjectRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  ProjectRouteRoute: ProjectRouteRouteWithChildren,
   SearchIndexRoute: SearchIndexRoute,
   DevUiComponentsIndexRoute: DevUiComponentsIndexRoute,
 }
