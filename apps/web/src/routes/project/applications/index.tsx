@@ -18,7 +18,7 @@ import { useState } from "react";
 import {
 	type Application,
 	ApplicationFormDialog,
-} from "@/routes/dev/mocks/form/ApplicationFormDialog";
+} from "@/routes/dev/mocks/ApplicationFormDialog";
 import styles from "../page.module.scss";
 import applicationsStyles from "./applications.module.scss";
 
@@ -282,7 +282,7 @@ function ApplicationsPage() {
 			{/* フォーム回答ダイアログ */}
 			<ApplicationFormDialog
 				open={!!selectedApplication}
-				onOpenChange={open => {
+				onOpenChange={(open: boolean) => {
 					if (!open) setSelectedApplication(null);
 				}}
 				application={selectedApplication}

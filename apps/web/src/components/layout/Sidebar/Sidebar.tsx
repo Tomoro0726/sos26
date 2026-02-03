@@ -13,6 +13,7 @@ import {
 import { IconButton, Text, Tooltip } from "@radix-ui/themes";
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { ProjectSelector } from "./ProjectSelector";
 import styles from "./Sidebar.module.scss";
 
 export type MenuItem = {
@@ -155,6 +156,8 @@ export function Sidebar({
 					</div>
 				)}
 			</div>
+
+			<ProjectSelector collapsed={collapsed} />
 
 			<nav className={styles.nav}>{menuItems.map(renderMenuItem)}</nav>
 

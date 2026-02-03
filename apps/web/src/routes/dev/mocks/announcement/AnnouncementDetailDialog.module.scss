@@ -12,10 +12,23 @@
 
 .header {
 	display: flex;
-	flex-direction: column;
-	gap: var(--space-2);
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--space-4);
 	border-bottom: 1px solid var(--gray-a4);
 	padding-bottom: var(--space-3);
+}
+
+.headerContent {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	flex: 1;
+}
+
+.closeButton {
+	flex-shrink: 0;
+	margin-top: -4px;
 }
 
 .content {
