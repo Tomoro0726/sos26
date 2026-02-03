@@ -18,7 +18,7 @@ import { useState } from "react";
 import {
 	type Application,
 	ApplicationFormDialog,
-} from "@/routes/dev/mocks/ApplicationFormDialog";
+} from "@/routes/dev/mocks/form/ApplicationFormDialog";
 import styles from "../page.module.scss";
 import applicationsStyles from "./applications.module.scss";
 
