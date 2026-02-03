@@ -1,10 +1,18 @@
 import {
-	CrossCircledIcon,
+	CheckIcon,
+	CopyIcon,
+	Cross2Icon,
+	DownloadIcon,
+	MagnifyingGlassIcon,
 	MixerVerticalIcon,
+	PersonIcon,
+	PlusIcon,
 	TrashIcon,
 } from "@radix-ui/react-icons";
 import {
 	Badge,
+	Button,
+	Dialog,
 	DropdownMenu,
 	Heading,
 	IconButton,
@@ -93,357 +101,237 @@ function getRoleBadgeColor(
 }
 
 function MembersPage() {
-	const [openFilterMenu, setOpenFilterMenu] = useState<string | null>(null);
-	const [filterSearch, setFilterSearch] = useState<Record<string, string>>({});
-	const [selectedFilters, setSelectedFilters] = useState<
-		Record<string, Set<string>>
-	>({});
+	const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+	const [inviteCode] = useState("ABC123");
+	const [codeCopied, setCodeCopied] = useState(false);
 
-	const getUniqueValues = (column: keyof Member): string[] => {
-		const values = dummyMembers
-			.map(m => m[column])
-			.filter((v): v is string => typeof v === "string");
-		return [...new Set(values)].sort();
+	const handleCopyCode = () => {
+		navigator.clipboard.writeText(inviteCode);
+		setCodeCopied(true);
+		setTimeout(() => setCodeCopied(false), 2000);
 	};
 
-	const getFilteredOptions = (column: string): string[] => {
-		const values = getUniqueValues(column as keyof Member);
-		const searchTerm = (filterSearch[column] || "").toLowerCase();
-		return values.filter(v => v.toLowerCase().includes(searchTerm));
-	};
-
-	const toggleFilterOption = (column: string, value: string) => {
-		setSelectedFilters(prev => {
-			const newSet = new Set(prev[column] || []);
-			if (newSet.has(value)) {
-				newSet.delete(value);
-			} else {
-				newSet.add(value);
-			}
-			return { ...prev, [column]: newSet };
-		});
-	};
-
-	const clearFilter = (column: string) => {
-		setSelectedFilters(prev => ({ ...prev, [column]: new Set() }));
-		setFilterSearch(prev => ({ ...prev, [column]: "" }));
-	};
-
-	const getActiveFilterCount = (column: string): number => {
-		return (selectedFilters[column] || new Set()).size;
-	};
 	return (
-		<div className={styles.page}>
-			<div className={styles.pageHeader}>
-				<Heading size="6">メンバー管理</Heading>
-				<Text size="2" color="gray" mt="2">
-					プロジェクトのメンバーを管理できます。
-				</Text>
-			</div>
-			<div className={membersStyles.container}>
-				<Table.Root>
-					<Table.Header>
-						<Table.Row>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>名前</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "name" ? null : "name"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>学年</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "grade" ? null : "grade"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-								{openFilterMenu === "grade" && (
-									<div className={membersStyles.filterMenu}>
-										<div className={membersStyles.filterHeader}>
-											<TextField.Root
-												size="1"
-												value={filterSearch.grade || ""}
-												onChange={e =>
-													setFilterSearch(prev => ({
-														...prev,
-														grade: e.target.value,
-													}))
-												}
-												placeholder="検索..."
-											/>
-										</div>
-										<div className={membersStyles.filterOptions}>
-											{getFilteredOptions("grade").map(value => (
-												<label
-													key={value}
-													className={membersStyles.filterCheckbox}
-												>
-													<input
-														type="checkbox"
-														checked={(selectedFilters.grade || new Set()).has(
-															value
-														)}
-														onChange={() => toggleFilterOption("grade", value)}
-													/>
-													{value}
-												</label>
-											))}
-										</div>
-										{getActiveFilterCount("grade") > 0 && (
-											<button
-												type="button"
-												className={membersStyles.clearFilterButton}
-												onClick={() => clearFilter("grade")}
-											>
-												<CrossCircledIcon width={14} height={14} />
-												クリア
-											</button>
-										)}
+		<>
+			<div className={styles.page}>
+				<div className={styles.pageHeader}>
+					<Heading size="6">メンバー管理</Heading>
+					<Text size="2" color="gray" mt="2">
+						プロジェクトのメンバーを管理できます。
+					</Text>
+				</div>
+				<div className={membersStyles.topBar}>
+					<div className={membersStyles.searchArea}>
+						<TextField.Root placeholder="名前やメールアドレスで検索...">
+							<TextField.Slot side="left">
+								<MagnifyingGlassIcon height="16" width="16" />
+							</TextField.Slot>
+						</TextField.Root>
+					</div>
+					<div className={membersStyles.actionButtons}>
+						<Button variant="outline">
+							<DownloadIcon width={16} height={16} />
+							CSVダウンロード
+						</Button>
+						<Button onClick={() => setInviteDialogOpen(true)}>
+							<PlusIcon width={16} height={16} />
+							メンバーを招待
+						</Button>
+					</div>
+				</div>
+				<div className={membersStyles.container}>
+					<Table.Root>
+						<Table.Header>
+							<Table.Row>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>名前</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
 									</div>
-								)}
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>学類</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "department" ? null : "department"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-								{openFilterMenu === "department" && (
-									<div className={membersStyles.filterMenu}>
-										<div className={membersStyles.filterHeader}>
-											<TextField.Root
-												size="1"
-												value={filterSearch.department || ""}
-												onChange={e =>
-													setFilterSearch(prev => ({
-														...prev,
-														department: e.target.value,
-													}))
-												}
-												placeholder="検索..."
-											/>
-										</div>
-										<div className={membersStyles.filterOptions}>
-											{getFilteredOptions("department").map(value => (
-												<label
-													key={value}
-													className={membersStyles.filterCheckbox}
-												>
-													<input
-														type="checkbox"
-														checked={(
-															selectedFilters.department || new Set()
-														).has(value)}
-														onChange={() =>
-															toggleFilterOption("department", value)
-														}
-													/>
-													{value}
-												</label>
-											))}
-										</div>
-										{getActiveFilterCount("department") > 0 && (
-											<button
-												type="button"
-												className={membersStyles.clearFilterButton}
-												onClick={() => clearFilter("department")}
-											>
-												<CrossCircledIcon width={14} height={14} />
-												クリア
-											</button>
-										)}
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>学年</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
 									</div>
-								)}
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>メールアドレス</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "email" ? null : "email"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>役職</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "role" ? null : "role"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-								{openFilterMenu === "role" && (
-									<div className={membersStyles.filterMenu}>
-										<div className={membersStyles.filterHeader}>
-											<TextField.Root
-												size="1"
-												value={filterSearch.role || ""}
-												onChange={e =>
-													setFilterSearch(prev => ({
-														...prev,
-														role: e.target.value,
-													}))
-												}
-												placeholder="検索..."
-											/>
-										</div>
-										<div className={membersStyles.filterOptions}>
-											{getFilteredOptions("role").map(value => (
-												<label
-													key={value}
-													className={membersStyles.filterCheckbox}
-												>
-													<input
-														type="checkbox"
-														checked={(selectedFilters.role || new Set()).has(
-															value
-														)}
-														onChange={() => toggleFilterOption("role", value)}
-													/>
-													{value}
-												</label>
-											))}
-										</div>
-										{getActiveFilterCount("role") > 0 && (
-											<button
-												type="button"
-												className={membersStyles.clearFilterButton}
-												onClick={() => clearFilter("role")}
-											>
-												<CrossCircledIcon width={14} height={14} />
-												クリア
-											</button>
-										)}
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>学類</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
 									</div>
-								)}
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={membersStyles.headerCell}>
-									<Text>参加日</Text>
-									<IconButton
-										variant="ghost"
-										size="1"
-										aria-label="フィルター"
-										className={membersStyles.filterButton}
-										onClick={() =>
-											setOpenFilterMenu(
-												openFilterMenu === "joinDate" ? null : "joinDate"
-											)
-										}
-									>
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>操作</Table.ColumnHeaderCell>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{dummyMembers.map(member => (
-							<Table.Row key={member.id}>
-								<Table.Cell>
-									<Text size="2">{member.name}</Text>
-								</Table.Cell>
-								<Table.Cell>
-									<Text size="2">{member.grade}</Text>
-								</Table.Cell>
-								<Table.Cell>
-									<Text size="2">{member.department}</Text>
-								</Table.Cell>
-								<Table.Cell>
-									<Text size="2">{member.email}</Text>
-								</Table.Cell>
-								<Table.Cell>
-									<Badge color={getRoleBadgeColor(member.role)} variant="soft">
-										{member.role}
-									</Badge>
-								</Table.Cell>
-								<Table.Cell>
-									<Text size="2">{member.joinDate}</Text>
-								</Table.Cell>
-								<Table.Cell>
-									<DropdownMenu.Root>
-										<DropdownMenu.Trigger>
-											<IconButton variant="ghost" size="1" aria-label="操作">
-												<Text>⋮</Text>
-											</IconButton>
-										</DropdownMenu.Trigger>
-										<DropdownMenu.Content>
-											<DropdownMenu.Item
-												onClick={() => {
-													// ロジックは実装しない
-												}}
-											>
-												副責任者に指名
-											</DropdownMenu.Item>
-											<DropdownMenu.Item
-												color="red"
-												onClick={() => {
-													// ロジックは実装しない
-												}}
-											>
-												<TrashIcon width={14} height={14} />
-												削除
-											</DropdownMenu.Item>
-										</DropdownMenu.Content>
-									</DropdownMenu.Root>
-								</Table.Cell>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>メールアドレス</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>役職</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>
+									<div className={membersStyles.headerCell}>
+										<Text>参加日</Text>
+										<IconButton
+											variant="ghost"
+											size="1"
+											aria-label="フィルター"
+										>
+											<MixerVerticalIcon width={14} height={14} />
+										</IconButton>
+									</div>
+								</Table.ColumnHeaderCell>
+								<Table.ColumnHeaderCell>操作</Table.ColumnHeaderCell>
 							</Table.Row>
-						))}
-					</Table.Body>
-				</Table.Root>
+						</Table.Header>
+						<Table.Body>
+							{dummyMembers.map(member => (
+								<Table.Row key={member.id}>
+									<Table.Cell>
+										<div className={membersStyles.nameCell}>
+											<img
+												src={`/dummy/user-icons/${member.id}.png`}
+												alt={member.name}
+												className={membersStyles.userIcon}
+												role="presentation"
+												onError={e => {
+													(e.target as HTMLImageElement).src =
+														"/dummy/user-icons/default.png";
+												}}
+											/>
+											<Text size="2">{member.name}</Text>
+										</div>
+									</Table.Cell>
+									<Table.Cell>
+										<Text size="2">{member.grade}</Text>
+									</Table.Cell>
+									<Table.Cell>
+										<Text size="2">{member.department}</Text>
+									</Table.Cell>
+									<Table.Cell>
+										<Text size="2">{member.email}</Text>
+									</Table.Cell>
+									<Table.Cell>
+										<Badge
+											color={getRoleBadgeColor(member.role)}
+											variant="soft"
+										>
+											{member.role}
+										</Badge>
+									</Table.Cell>
+									<Table.Cell>
+										<Text size="2">{member.joinDate}</Text>
+									</Table.Cell>
+									<Table.Cell>
+										<DropdownMenu.Root>
+											<DropdownMenu.Trigger>
+												<IconButton variant="ghost" size="1" aria-label="操作">
+													<Text>⋮</Text>
+												</IconButton>
+											</DropdownMenu.Trigger>
+											<DropdownMenu.Content>
+												<DropdownMenu.Item
+													onClick={() => {
+														// ロジックは実装しない
+													}}
+												>
+													<PersonIcon width={14} height={14} />
+													副責任者に指名
+												</DropdownMenu.Item>
+												<DropdownMenu.Item
+													color="red"
+													onClick={() => {
+														// ロジックは実装しない
+													}}
+												>
+													<TrashIcon width={14} height={14} />
+													削除
+												</DropdownMenu.Item>
+											</DropdownMenu.Content>
+										</DropdownMenu.Root>
+									</Table.Cell>
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Root>
+				</div>
 			</div>
-		</div>
+			<Dialog.Root open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+				<Dialog.Content>
+					<div className={membersStyles.inviteDialogHeader}>
+						<Dialog.Title>メンバー招待</Dialog.Title>
+						<Dialog.Close>
+							<IconButton variant="ghost" size="1" aria-label="閉じる">
+								<Cross2Icon width={18} height={18} />
+							</IconButton>
+						</Dialog.Close>
+					</div>
+					<Dialog.Description>
+						このコードを共有して、メンバーを招待できます
+					</Dialog.Description>
+
+					<div className={membersStyles.inviteDialogContent}>
+						<div className={membersStyles.codeContainer}>
+							<Text className={membersStyles.codeDisplay}>{inviteCode}</Text>
+							<Button
+								size="2"
+								variant="ghost"
+								onClick={handleCopyCode}
+								title="コピー"
+							>
+								{codeCopied ? (
+									<CheckIcon width={20} height={20} />
+								) : (
+									<CopyIcon width={20} height={20} />
+								)}
+							</Button>
+						</div>
+						{codeCopied && (
+							<Text
+								size="1"
+								color="green"
+								className={membersStyles.codeCopyMessage}
+							>
+								✓ コピーしました
+							</Text>
+						)}
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+		</>
 	);
 }
