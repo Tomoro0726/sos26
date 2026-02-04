@@ -322,14 +322,6 @@ function CommitteeMastersheetPage() {
 					</TextField.Root>
 				</div>
 				<div className={styles.actionButtons}>
-					<Button
-						variant={historyPanelOpen ? "solid" : "outline"}
-						onClick={() => setHistoryPanelOpen(!historyPanelOpen)}
-					>
-						<CounterClockwiseClockIcon width={16} height={16} />
-						履歴
-					</Button>
-
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
 							<Button>
@@ -346,7 +338,13 @@ function CommitteeMastersheetPage() {
 							</DropdownMenu.Item>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
-
+					<Button
+						variant={historyPanelOpen ? "solid" : "outline"}
+						onClick={() => setHistoryPanelOpen(!historyPanelOpen)}
+					>
+						<CounterClockwiseClockIcon width={16} height={16} />
+						履歴
+					</Button>
 					<Button variant="outline" onClick={handleCSVDownload}>
 						<DownloadIcon width={16} height={16} />
 						CSVダウンロード
