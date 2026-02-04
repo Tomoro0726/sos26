@@ -1,6 +1,7 @@
 import {
 	ArrowUpIcon,
 	Cross2Icon,
+	DownloadIcon,
 	MagnifyingGlassIcon,
 	MixerVerticalIcon,
 	PlusIcon,
@@ -92,6 +93,96 @@ const dummyForms: Form[] = [
 	},
 ];
 
+// フォーム結果のダミーデータ
+interface FormResponse {
+	id: string;
+	projectName: string;
+	respondent: string;
+	submittedAt: string;
+	answers: Record<string, string>;
+}
+
+const dummyFormResponses: Record<string, FormResponse[]> = {
+	"1": [
+		{
+			id: "r1",
+			projectName: "模擬店A",
+			respondent: "山田太郎",
+			submittedAt: "2026-02-03 14:30",
+			answers: {
+				名前: "山田太郎",
+				メール: "yamada@example.com",
+				部署: "企画部",
+				備考: "特になし",
+			},
+		},
+		{
+			id: "r2",
+			projectName: "ステージ企画B",
+			respondent: "佐藤花子",
+			submittedAt: "2026-02-03 15:45",
+			answers: {
+				名前: "佐藤花子",
+				メール: "sato@example.com",
+				部署: "広報部",
+				備考: "参加希望です",
+			},
+		},
+		{
+			id: "r3",
+			projectName: "展示会C",
+			respondent: "鈴木一郎",
+			submittedAt: "2026-02-03 16:20",
+			answers: {
+				名前: "鈴木一郎",
+				メール: "suzuki@example.com",
+				部署: "財務部",
+				備考: "",
+			},
+		},
+	],
+	"2": [
+		{
+			id: "r4",
+			projectName: "模擬店A",
+			respondent: "高橋健太",
+			submittedAt: "2026-02-02 10:00",
+			answers: {
+				名前: "高橋健太",
+				メール: "takahashi@example.com",
+				部署: "企画部",
+				備考: "よろしくお願いします",
+			},
+		},
+		{
+			id: "r5",
+			projectName: "カフェD",
+			respondent: "伊藤美咲",
+			submittedAt: "2026-02-02 11:30",
+			answers: {
+				名前: "伊藤美咲",
+				メール: "ito@example.com",
+				部署: "広報部",
+				備考: "",
+			},
+		},
+	],
+	"4": [
+		{
+			id: "r6",
+			projectName: "模擬店A",
+			respondent: "田中次郎",
+			submittedAt: "2026-01-30 09:00",
+			answers: {
+				名前: "田中次郎",
+				メール: "tanaka@example.com",
+				部署: "財務部",
+				備考: "アンケート回答",
+			},
+		},
+	],
+};
+
 // 送信対象企画のダミーデータ
 interface Project {
 	id: string;
@@ -176,6 +267,8 @@ function CommitteeFormsPage() {
 	const [sharingFormId, setSharingFormId] = useState<string | null>(null);
 	const [shareEmail, setShareEmail] = useState("");
 	const [sharedEmails, setSharedEmails] = useState<string[]>([]);
+	const [resultsDialogOpen, setResultsDialogOpen] = useState(false);
+	const [viewingFormId, setViewingFormId] = useState<string | null>(null);
 
 	const sharingForm = dummyForms.find(f => f.id === sharingFormId);
 
@@ -221,6 +314,16 @@ function CommitteeFormsPage() {
 		setShareDialogOpen(false);
 		setSharingFormId(null);
 	};
+
+	const handleViewResults = (formId: string) => {
+		setViewingFormId(formId);
+		setResultsDialogOpen(true);
+	};
+
+	const viewingForm = dummyForms.find(f => f.id === viewingFormId);
+	const viewingFormResponses = viewingFormId
+		? dummyFormResponses[viewingFormId] || []
+		: [];
 
 	const handleEdit = (form: Form) => {
 		const editForm: FormModel = {
@@ -484,7 +587,11 @@ function CommitteeFormsPage() {
 												>
 													共有
 												</DropdownMenu.Item>
-												<DropdownMenu.Item>結果を見る</DropdownMenu.Item>
+												<DropdownMenu.Item
+													onClick={() => handleViewResults(form.id)}
+												>
+													結果を見る
+												</DropdownMenu.Item>
 												<DropdownMenu.Item
 													onClick={() => handleSubmit(form.name)}
 												>
@@ -864,6 +971,191 @@ function CommitteeFormsPage() {
 						>
 							共有する
 						</Button>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
+			{/* 結果表示ダイアログ */}
+			<Dialog.Root open={resultsDialogOpen} onOpenChange={setResultsDialogOpen}>
+				<Dialog.Content style={{ maxWidth: "90vw", width: 1200 }}>
+					<Dialog.Title>フォーム回答結果</Dialog.Title>
+					<Dialog.Description>
+						「{viewingForm?.name}」の回答結果を確認してください。
+					</Dialog.Description>
+
+					<div style={{ marginTop: "var(--space-4)" }}>
+						{viewingFormResponses.length === 0 ? (
+							<div
+								style={{
+									textAlign: "center",
+									padding: "var(--space-6)",
+									color: "var(--gray-a11)",
+								}}
+							>
+								<Text size="3">まだ回答がありません</Text>
+							</div>
+						) : (
+							<div
+								style={{
+									maxHeight: "60vh",
+									overflowY: "auto",
+									border: "1px solid var(--gray-a4)",
+									borderRadius: "var(--radius-2)",
+								}}
+							>
+								<Table.Root>
+									<Table.Header>
+										<Table.Row>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>企画名</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>回答者</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>回答日時</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>名前</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>メール</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>部署</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+											<Table.ColumnHeaderCell>
+												<div className={styles.headerCell}>
+													<Text>備考</Text>
+													<IconButton
+														variant="ghost"
+														size="1"
+														aria-label="フィルター"
+													>
+														<MixerVerticalIcon width={14} height={14} />
+													</IconButton>
+												</div>
+											</Table.ColumnHeaderCell>
+										</Table.Row>
+									</Table.Header>
+									<Table.Body>
+										{viewingFormResponses.map(response => (
+											<Table.Row key={response.id}>
+												<Table.Cell>
+													<Text size="2">{response.projectName}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.respondent}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.submittedAt}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.answers.名前 || "-"}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.answers.メール || "-"}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.answers.部署 || "-"}</Text>
+												</Table.Cell>
+												<Table.Cell>
+													<Text size="2">{response.answers.備考 || "-"}</Text>
+												</Table.Cell>
+											</Table.Row>
+										))}
+									</Table.Body>
+								</Table.Root>
+							</div>
+						)}
+
+						<div
+							style={{
+								marginTop: "var(--space-3)",
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}
+						>
+							<Text size="2" color="gray">
+								全 {viewingFormResponses.length} 件の回答
+							</Text>
+						</div>
+					</div>
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "flex-end",
+							gap: "var(--space-2)",
+							marginTop: "var(--space-4)",
+							paddingTop: "var(--space-4)",
+							borderTop: "1px solid var(--gray-a4)",
+						}}
+					>
+						<Button variant="soft" disabled={viewingFormResponses.length === 0}>
+							<DownloadIcon width={16} height={16} />
+							CSVでダウンロード
+						</Button>
+						<Dialog.Close>
+							<Button variant="soft" color="gray">
+								閉じる
+							</Button>
+						</Dialog.Close>
 					</div>
 				</Dialog.Content>
 			</Dialog.Root>
