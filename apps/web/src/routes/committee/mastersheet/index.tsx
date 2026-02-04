@@ -1,5 +1,7 @@
 import {
 	ArrowUpIcon,
+	CounterClockwiseClockIcon,
+	Cross2Icon,
 	DownloadIcon,
 	MagnifyingGlassIcon,
 	MixerVerticalIcon,
@@ -50,6 +52,20 @@ interface CustomColumn {
 	description: string;
 	options?: string[];
 	createdAt: string;
+}
+
+interface HistoryItem {
+	id: string;
+	projectName: string;
+	columnName: string;
+	oldValue: string;
+	newValue: string;
+	updatedBy: {
+		id: string;
+		name: string;
+		icon?: string;
+	};
+	updatedAt: string;
 }
 
 // ルート定義
@@ -144,11 +160,61 @@ const dummyColumns: CustomColumn[] = [
 	},
 ];
 
+// 履歴ダミーデータ
+const dummyHistory: HistoryItem[] = [
+	{
+		id: "h1",
+		projectName: "たこやき屋",
+		columnName: "企画名",
+		oldValue: "たこ焼き屋さん",
+		newValue: "たこやき屋",
+		updatedBy: { id: "1", name: "田中太郎", icon: "/dummy/user-icons/1.png" },
+		updatedAt: "2026-02-03 14:30",
+	},
+	{
+		id: "h2",
+		projectName: "たこやき屋",
+		columnName: "カテゴリー",
+		oldValue: "出店",
+		newValue: "飲食",
+		updatedBy: { id: "2", name: "佐藤花子", icon: "/dummy/user-icons/2.png" },
+		updatedAt: "2026-02-01 10:15",
+	},
+	{
+		id: "h3",
+		projectName: "バスケ部展示",
+		columnName: "企画名",
+		oldValue: "バスケ部",
+		newValue: "バスケ部展示",
+		updatedBy: { id: "3", name: "鈴木健一", icon: "/dummy/user-icons/3.png" },
+		updatedAt: "2026-02-02 09:00",
+	},
+	{
+		id: "h4",
+		projectName: "メイド喫茶",
+		columnName: "カテゴリー",
+		oldValue: "出店",
+		newValue: "飲食",
+		updatedBy: { id: "1", name: "田中太郎", icon: "/dummy/user-icons/1.png" },
+		updatedAt: "2026-02-01 16:45",
+	},
+	{
+		id: "h5",
+		projectName: "学園祭ライブ",
+		columnName: "予算",
+		oldValue: "50000",
+		newValue: "80000",
+		updatedBy: { id: "2", name: "佐藤花子", icon: "/dummy/user-icons/2.png" },
+		updatedAt: "2026-01-30 11:20",
+	},
+];
+
 // コンポーネント
 function CommitteeMastersheetPage() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [createColumnOpen, setCreateColumnOpen] = useState(false);
 	const [loadColumnOpen, setLoadColumnOpen] = useState(false);
+	const [historyPanelOpen, setHistoryPanelOpen] = useState(false);
 
 	const [columnForm, setColumnForm] = useState({
 		name: "",
@@ -256,6 +322,14 @@ function CommitteeMastersheetPage() {
 					</TextField.Root>
 				</div>
 				<div className={styles.actionButtons}>
+					<Button
+						variant={historyPanelOpen ? "solid" : "outline"}
+						onClick={() => setHistoryPanelOpen(!historyPanelOpen)}
+					>
+						<CounterClockwiseClockIcon width={16} height={16} />
+						履歴
+					</Button>
+
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
 							<Button>
@@ -280,78 +354,163 @@ function CommitteeMastersheetPage() {
 				</div>
 			</div>
 
-			<div className={styles.container}>
-				<Table.Root>
-					<Table.Header>
-						<Table.Row>
-							<Table.ColumnHeaderCell>
-								<div className={styles.headerCell}>
-									<Text>企画名</Text>
-									<IconButton variant="ghost" size="1" aria-label="ソート">
-										<ArrowUpIcon width={14} height={14} />
-									</IconButton>
-									<IconButton variant="ghost" size="1" aria-label="フィルター">
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={styles.headerCell}>
-									<Text>カテゴリー</Text>
-									<IconButton variant="ghost" size="1" aria-label="ソート">
-										<ArrowUpIcon width={14} height={14} />
-									</IconButton>
-									<IconButton variant="ghost" size="1" aria-label="フィルター">
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-							<Table.ColumnHeaderCell>
-								<div className={styles.headerCell}>
-									<Text>更新日</Text>
-									<IconButton variant="ghost" size="1" aria-label="ソート">
-										<ArrowUpIcon width={14} height={14} />
-									</IconButton>
-									<IconButton variant="ghost" size="1" aria-label="フィルター">
-										<MixerVerticalIcon width={14} height={14} />
-									</IconButton>
-								</div>
-							</Table.ColumnHeaderCell>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{filteredMastersheet.map(sheet => (
-							<Table.Row key={sheet.id}>
-								<Table.Cell>
-									<div className={styles.projectName}>
-										{sheet.icon && (
-											<img
-												src={sheet.icon}
-												alt={sheet.name}
-												className={styles.projectIcon}
-												role="presentation"
-												onError={e => {
-													(e.target as HTMLImageElement).src =
-														"/dummy/project-icons/default.png";
-												}}
-											/>
-										)}
-										<Text size="2">{sheet.name}</Text>
-									</div>
-								</Table.Cell>
-								<Table.Cell>
-									<Badge variant="soft">{sheet.category}</Badge>
-								</Table.Cell>
-								<Table.Cell>
-									<Text size="2" color="gray">
-										{sheet.updatedAt}
-									</Text>
-								</Table.Cell>
-							</Table.Row>
-						))}
-					</Table.Body>
-				</Table.Root>
+			<div className={styles.mainContent}>
+				<div className={styles.tableContainer}>
+					<div className={styles.container}>
+						<Table.Root>
+							<Table.Header>
+								<Table.Row>
+									<Table.ColumnHeaderCell>
+										<div className={styles.headerCell}>
+											<Text>企画名</Text>
+											<IconButton variant="ghost" size="1" aria-label="ソート">
+												<ArrowUpIcon width={14} height={14} />
+											</IconButton>
+											<IconButton
+												variant="ghost"
+												size="1"
+												aria-label="フィルター"
+											>
+												<MixerVerticalIcon width={14} height={14} />
+											</IconButton>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div className={styles.headerCell}>
+											<Text>カテゴリー</Text>
+											<IconButton variant="ghost" size="1" aria-label="ソート">
+												<ArrowUpIcon width={14} height={14} />
+											</IconButton>
+											<IconButton
+												variant="ghost"
+												size="1"
+												aria-label="フィルター"
+											>
+												<MixerVerticalIcon width={14} height={14} />
+											</IconButton>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div className={styles.headerCell}>
+											<Text>更新日</Text>
+											<IconButton variant="ghost" size="1" aria-label="ソート">
+												<ArrowUpIcon width={14} height={14} />
+											</IconButton>
+											<IconButton
+												variant="ghost"
+												size="1"
+												aria-label="フィルター"
+											>
+												<MixerVerticalIcon width={14} height={14} />
+											</IconButton>
+										</div>
+									</Table.ColumnHeaderCell>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{filteredMastersheet.map(sheet => (
+									<Table.Row key={sheet.id}>
+										<Table.Cell>
+											<div className={styles.projectName}>
+												{sheet.icon && (
+													<img
+														src={sheet.icon}
+														alt={sheet.name}
+														className={styles.projectIcon}
+														role="presentation"
+														onError={e => {
+															(e.target as HTMLImageElement).src =
+																"/dummy/project-icons/default.png";
+														}}
+													/>
+												)}
+												<Text size="2">{sheet.name}</Text>
+											</div>
+										</Table.Cell>
+										<Table.Cell>
+											<Badge variant="soft">{sheet.category}</Badge>
+										</Table.Cell>
+										<Table.Cell>
+											<Text size="2" color="gray">
+												{sheet.updatedAt}
+											</Text>
+										</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Root>
+					</div>
+				</div>
 			</div>
+
+			{/* 履歴パネル */}
+			{historyPanelOpen && (
+				<div className={styles.historyPanel}>
+					<div className={styles.historyHeader}>
+						<Text size="3" weight="bold">
+							更新履歴
+						</Text>
+						<IconButton
+							variant="ghost"
+							size="1"
+							onClick={() => setHistoryPanelOpen(false)}
+							aria-label="閉じる"
+						>
+							<Cross2Icon width={14} height={14} />
+						</IconButton>
+					</div>
+					<div className={styles.historyTimeline}>
+						{dummyHistory.map(item => (
+							<div key={item.id} className={styles.historyItem}>
+								<div className={styles.historyItemHeader}>
+									{item.updatedBy.icon && (
+										<img
+											src={item.updatedBy.icon}
+											alt={item.updatedBy.name}
+											className={styles.historyUserIcon}
+										/>
+									)}
+									<div className={styles.historyMeta}>
+										<Text size="2" weight="medium">
+											{item.updatedBy.name}
+										</Text>
+										<Text size="1" color="gray">
+											{item.updatedAt}
+										</Text>
+									</div>
+								</div>
+								<div className={styles.historyContent}>
+									<Text size="2">
+										<Text weight="bold">{item.projectName}</Text>
+										{" の "}
+										<Text color="gray">{item.columnName}</Text>
+										{" を変更"}
+									</Text>
+									<div className={styles.historyChange}>
+										<Text
+											size="1"
+											color="gray"
+											className={styles.historyOldValue}
+										>
+											{item.oldValue}
+										</Text>
+										<Text size="1" color="gray">
+											→
+										</Text>
+										<Text
+											size="1"
+											weight="medium"
+											className={styles.historyNewValue}
+										>
+											{item.newValue}
+										</Text>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
 
 			{/* 情報作成ダイアログ */}
 			<Dialog.Root open={createColumnOpen} onOpenChange={setCreateColumnOpen}>
