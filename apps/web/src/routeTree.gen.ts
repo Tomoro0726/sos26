@@ -16,9 +16,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as ProjectIndexRouteImport } from './routes/project/index'
 import { Route as CommitteeIndexRouteImport } from './routes/committee/index'
+import { Route as ProjectNoticeIndexRouteImport } from './routes/project/notice/index'
 import { Route as ProjectMembersIndexRouteImport } from './routes/project/members/index'
 import { Route as ProjectFormsIndexRouteImport } from './routes/project/forms/index'
-import { Route as ProjectAnnouncementsIndexRouteImport } from './routes/project/announcements/index'
 import { Route as CommitteeNoticeIndexRouteImport } from './routes/committee/notice/index'
 import { Route as CommitteeMembersIndexRouteImport } from './routes/committee/members/index'
 import { Route as CommitteeMastersheetIndexRouteImport } from './routes/committee/mastersheet/index'
@@ -66,6 +66,11 @@ const CommitteeIndexRoute = CommitteeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CommitteeRouteRoute,
 } as any)
+const ProjectNoticeIndexRoute = ProjectNoticeIndexRouteImport.update({
+  id: '/notice/',
+  path: '/notice/',
+  getParentRoute: () => ProjectRouteRoute,
+} as any)
 const ProjectMembersIndexRoute = ProjectMembersIndexRouteImport.update({
   id: '/members/',
   path: '/members/',
@@ -76,12 +81,6 @@ const ProjectFormsIndexRoute = ProjectFormsIndexRouteImport.update({
   path: '/forms/',
   getParentRoute: () => ProjectRouteRoute,
 } as any)
-const ProjectAnnouncementsIndexRoute =
-  ProjectAnnouncementsIndexRouteImport.update({
-    id: '/announcements/',
-    path: '/announcements/',
-    getParentRoute: () => ProjectRouteRoute,
-  } as any)
 const CommitteeNoticeIndexRoute = CommitteeNoticeIndexRouteImport.update({
   id: '/notice/',
   path: '/notice/',
@@ -156,9 +155,9 @@ export interface FileRoutesByFullPath {
   '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
   '/committee/members': typeof CommitteeMembersIndexRoute
   '/committee/notice': typeof CommitteeNoticeIndexRoute
-  '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/forms': typeof ProjectFormsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
+  '/project/notice': typeof ProjectNoticeIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components': typeof DevUiComponentsIndexRoute
@@ -177,9 +176,9 @@ export interface FileRoutesByTo {
   '/committee/mastersheet': typeof CommitteeMastersheetIndexRoute
   '/committee/members': typeof CommitteeMembersIndexRoute
   '/committee/notice': typeof CommitteeNoticeIndexRoute
-  '/project/announcements': typeof ProjectAnnouncementsIndexRoute
   '/project/forms': typeof ProjectFormsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
+  '/project/notice': typeof ProjectNoticeIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components': typeof DevUiComponentsIndexRoute
@@ -201,9 +200,9 @@ export interface FileRoutesById {
   '/committee/mastersheet/': typeof CommitteeMastersheetIndexRoute
   '/committee/members/': typeof CommitteeMembersIndexRoute
   '/committee/notice/': typeof CommitteeNoticeIndexRoute
-  '/project/announcements/': typeof ProjectAnnouncementsIndexRoute
   '/project/forms/': typeof ProjectFormsIndexRoute
   '/project/members/': typeof ProjectMembersIndexRoute
+  '/project/notice/': typeof ProjectNoticeIndexRoute
   '/auth/register/setup/': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify/': typeof AuthRegisterVerifyIndexRoute
   '/dev/ui/components/': typeof DevUiComponentsIndexRoute
@@ -226,9 +225,9 @@ export interface FileRouteTypes {
     | '/committee/mastersheet'
     | '/committee/members'
     | '/committee/notice'
-    | '/project/announcements'
     | '/project/forms'
     | '/project/members'
+    | '/project/notice'
     | '/auth/register/setup'
     | '/auth/register/verify'
     | '/dev/ui/components'
@@ -247,9 +246,9 @@ export interface FileRouteTypes {
     | '/committee/mastersheet'
     | '/committee/members'
     | '/committee/notice'
-    | '/project/announcements'
     | '/project/forms'
     | '/project/members'
+    | '/project/notice'
     | '/auth/register/setup'
     | '/auth/register/verify'
     | '/dev/ui/components'
@@ -270,9 +269,9 @@ export interface FileRouteTypes {
     | '/committee/mastersheet/'
     | '/committee/members/'
     | '/committee/notice/'
-    | '/project/announcements/'
     | '/project/forms/'
     | '/project/members/'
+    | '/project/notice/'
     | '/auth/register/setup/'
     | '/auth/register/verify/'
     | '/dev/ui/components/'
@@ -338,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommitteeIndexRouteImport
       parentRoute: typeof CommitteeRouteRoute
     }
+    '/project/notice/': {
+      id: '/project/notice/'
+      path: '/notice'
+      fullPath: '/project/notice'
+      preLoaderRoute: typeof ProjectNoticeIndexRouteImport
+      parentRoute: typeof ProjectRouteRoute
+    }
     '/project/members/': {
       id: '/project/members/'
       path: '/members'
@@ -350,13 +356,6 @@ declare module '@tanstack/react-router' {
       path: '/forms'
       fullPath: '/project/forms'
       preLoaderRoute: typeof ProjectFormsIndexRouteImport
-      parentRoute: typeof ProjectRouteRoute
-    }
-    '/project/announcements/': {
-      id: '/project/announcements/'
-      path: '/announcements'
-      fullPath: '/project/announcements'
-      preLoaderRoute: typeof ProjectAnnouncementsIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
     }
     '/committee/notice/': {
@@ -483,16 +482,16 @@ const CommitteeRouteRouteWithChildren = CommitteeRouteRoute._addFileChildren(
 
 interface ProjectRouteRouteChildren {
   ProjectIndexRoute: typeof ProjectIndexRoute
-  ProjectAnnouncementsIndexRoute: typeof ProjectAnnouncementsIndexRoute
   ProjectFormsIndexRoute: typeof ProjectFormsIndexRoute
   ProjectMembersIndexRoute: typeof ProjectMembersIndexRoute
+  ProjectNoticeIndexRoute: typeof ProjectNoticeIndexRoute
 }
 
 const ProjectRouteRouteChildren: ProjectRouteRouteChildren = {
   ProjectIndexRoute: ProjectIndexRoute,
-  ProjectAnnouncementsIndexRoute: ProjectAnnouncementsIndexRoute,
   ProjectFormsIndexRoute: ProjectFormsIndexRoute,
   ProjectMembersIndexRoute: ProjectMembersIndexRoute,
+  ProjectNoticeIndexRoute: ProjectNoticeIndexRoute,
 }
 
 const ProjectRouteRouteWithChildren = ProjectRouteRoute._addFileChildren(

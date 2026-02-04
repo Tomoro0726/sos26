@@ -23,7 +23,7 @@ import { dummyAnnouncements } from "@/routes/dev/mocks/announcement/announcement
 import styles from "../page.module.scss";
 import announcementsStyles from "./announcements.module.scss";
 
-export const Route = createFileRoute("/project/announcements/")({
+export const Route = createFileRoute("/project/notice/")({
 	component: AnnouncementsPage,
 });
 

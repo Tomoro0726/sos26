@@ -49,7 +49,7 @@ export const projectMenuItems: MenuItem[] = [
 	{
 		label: "お知らせ",
 		icon: <BellIcon />,
-		to: "/project/announcements",
+		to: "/project/notice",
 		notificationCount: 12,
 	},
 ];

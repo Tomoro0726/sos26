@@ -69,6 +69,20 @@ interface HistoryItem {
 	updatedAt: string;
 }
 
+interface FormQuestion {
+	id: string;
+	title: string;
+	type: "text" | "number" | "select" | "checkbox" | "radio";
+}
+
+interface OwnedForm {
+	id: string;
+	name: string;
+	description: string;
+	questions: FormQuestion[];
+	updatedAt: string;
+}
+
 // ルート定義
 export const Route = createFileRoute("/committee/mastersheet/")({
 	component: CommitteeMastersheetPage,
@@ -210,6 +224,47 @@ const dummyHistory: HistoryItem[] = [
 	},
 ];
 
+// オーナーのフォームダミーデータ
+const dummyOwnedForms: OwnedForm[] = [
+	{
+		id: "form-1",
+		name: "出店申請フォーム",
+		description: "出店に必要な情報を収集するフォーム",
+		questions: [
+			{ id: "q1-1", title: "企画名", type: "text" },
+			{ id: "q1-2", title: "希望ブースサイズ", type: "select" },
+			{ id: "q1-3", title: "電源容量(W)", type: "number" },
+			{ id: "q1-4", title: "販売予定商品", type: "text" },
+		],
+		updatedAt: "2026-01-25",
+	},
+	{
+		id: "form-2",
+		name: "パフォーマンス申請",
+		description: "ステージパフォーマンスの申請フォーム",
+		questions: [
+			{ id: "q2-1", title: "団体名", type: "text" },
+			{ id: "q2-2", title: "希望時間帯", type: "select" },
+			{ id: "q2-3", title: "出演人数", type: "number" },
+			{ id: "q2-4", title: "音響機材の使用", type: "checkbox" },
+			{ id: "q2-5", title: "ジャンル", type: "radio" },
+		],
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "form-3",
+		name: "飲食出店許可申請",
+		description: "食品販売に必要な許可申請",
+		questions: [
+			{ id: "q3-1", title: "販売食品名", type: "text" },
+			{ id: "q3-2", title: "調理方法", type: "select" },
+			{ id: "q3-3", title: "保健所届出済み", type: "checkbox" },
+			{ id: "q3-4", title: "食品試験受検日", type: "text" },
+		],
+		updatedAt: "2026-01-18",
+	},
+];
+
 // コンポーネント
 function CommitteeMastersheetPage() {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -217,6 +272,11 @@ function CommitteeMastersheetPage() {
 	const [loadColumnOpen, setLoadColumnOpen] = useState(false);
 	const [historyPanelOpen, setHistoryPanelOpen] = useState(false);
 	const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+	const [createFromFormOpen, setCreateFromFormOpen] = useState(false);
+	const [selectedFormId, setSelectedFormId] = useState<string | null>(null);
+	const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(
+		new Set()
+	);
 
 	const [columnForm, setColumnForm] = useState({
 		name: "",
@@ -335,6 +395,10 @@ function CommitteeMastersheetPage() {
 							<DropdownMenu.Item onClick={() => setCreateColumnOpen(true)}>
 								情報を作成
 							</DropdownMenu.Item>
+							<DropdownMenu.Item onClick={() => setCreateFromFormOpen(true)}>
+								フォームから作成
+							</DropdownMenu.Item>
+							<DropdownMenu.Separator />
 							<DropdownMenu.Item onClick={() => setLoadColumnOpen(true)}>
 								情報を読み込み
 							</DropdownMenu.Item>
@@ -840,6 +904,195 @@ function CommitteeMastersheetPage() {
 								閉じる
 							</Button>
 						</Dialog.Close>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
+			{/* フォームから情報作成ダイアログ */}
+			<Dialog.Root
+				open={createFromFormOpen}
+				onOpenChange={open => {
+					setCreateFromFormOpen(open);
+					if (!open) {
+						setSelectedFormId(null);
+						setSelectedQuestionIds(new Set());
+					}
+				}}
+			>
+				<Dialog.Content style={{ maxWidth: 700 }}>
+					<Dialog.Title>フォームから情報を作成</Dialog.Title>
+					<Dialog.Description>
+						自分がオーナーのフォームから質問を選択して、マスターシートのカラムとして追加できます。
+					</Dialog.Description>
+
+					<div
+						style={{
+							display: "flex",
+							gap: "var(--space-4)",
+							marginTop: "var(--space-4)",
+							minHeight: 300,
+						}}
+					>
+						{/* フォーム一覧 */}
+						<div
+							style={{
+								width: "40%",
+								borderRight: "1px solid var(--gray-a4)",
+								paddingRight: "var(--space-4)",
+							}}
+						>
+							<Text
+								size="2"
+								weight="bold"
+								style={{ display: "block", marginBottom: "var(--space-3)" }}
+							>
+								フォーム一覧
+							</Text>
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									gap: "var(--space-2)",
+								}}
+							>
+								{dummyOwnedForms.map(form => (
+									<button
+										type="button"
+										key={form.id}
+										onClick={() => {
+											setSelectedFormId(form.id);
+											setSelectedQuestionIds(new Set());
+										}}
+										style={{
+											padding: "var(--space-3)",
+											borderRadius: "var(--radius-2)",
+											border:
+												selectedFormId === form.id
+													? "2px solid var(--accent-9)"
+													: "1px solid var(--gray-a4)",
+											backgroundColor:
+												selectedFormId === form.id
+													? "var(--accent-a2)"
+													: "transparent",
+											cursor: "pointer",
+											textAlign: "left",
+											width: "100%",
+										}}
+									>
+										<Text size="2" weight="medium" style={{ display: "block" }}>
+											{form.name}
+										</Text>
+										<Text size="1" color="gray">
+											{form.description}
+										</Text>
+									</button>
+								))}
+							</div>
+						</div>
+
+						{/* 質問一覧 */}
+						<div style={{ flex: 1 }}>
+							<Text
+								size="2"
+								weight="bold"
+								style={{ display: "block", marginBottom: "var(--space-3)" }}
+							>
+								質問を選択
+							</Text>
+							{selectedFormId ? (
+								<div
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										gap: "var(--space-2)",
+									}}
+								>
+									{dummyOwnedForms
+										.find(f => f.id === selectedFormId)
+										?.questions.map(question => (
+											<div
+												key={question.id}
+												style={{
+													display: "flex",
+													alignItems: "center",
+													gap: "var(--space-2)",
+													padding: "var(--space-2) var(--space-3)",
+													borderRadius: "var(--radius-2)",
+													border: "1px solid var(--gray-a4)",
+												}}
+											>
+												<Checkbox
+													checked={selectedQuestionIds.has(question.id)}
+													onCheckedChange={checked => {
+														setSelectedQuestionIds(prev => {
+															const next = new Set(prev);
+															if (checked) {
+																next.add(question.id);
+															} else {
+																next.delete(question.id);
+															}
+															return next;
+														});
+													}}
+												/>
+												<div style={{ flex: 1 }}>
+													<Text size="2">{question.title}</Text>
+													<Badge
+														size="1"
+														variant="soft"
+														color="gray"
+														style={{ marginLeft: "var(--space-2)" }}
+													>
+														{question.type === "text" && "テキスト"}
+														{question.type === "number" && "数値"}
+														{question.type === "select" && "選択"}
+														{question.type === "checkbox" && "チェック"}
+														{question.type === "radio" && "ラジオ"}
+													</Badge>
+												</div>
+											</div>
+										))}
+								</div>
+							) : (
+								<Text size="2" color="gray">
+									左側からフォームを選択してください
+								</Text>
+							)}
+						</div>
+					</div>
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							marginTop: "var(--space-4)",
+							paddingTop: "var(--space-4)",
+							borderTop: "1px solid var(--gray-a4)",
+						}}
+					>
+						<Text size="2" color="gray">
+							{selectedQuestionIds.size > 0 &&
+								`${selectedQuestionIds.size}件の質問を選択中`}
+						</Text>
+						<div style={{ display: "flex", gap: "var(--space-2)" }}>
+							<Dialog.Close>
+								<Button variant="soft" color="gray">
+									キャンセル
+								</Button>
+							</Dialog.Close>
+							<Button
+								disabled={selectedQuestionIds.size === 0}
+								onClick={() => {
+									// TODO: カラム作成API呼び出し
+									setCreateFromFormOpen(false);
+									setSelectedFormId(null);
+									setSelectedQuestionIds(new Set());
+								}}
+							>
+								カラムを作成
+							</Button>
+						</div>
 					</div>
 				</Dialog.Content>
 			</Dialog.Root>
