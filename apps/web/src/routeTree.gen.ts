@@ -17,7 +17,7 @@ import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as ProjectIndexRouteImport } from './routes/project/index'
 import { Route as CommitteeIndexRouteImport } from './routes/committee/index'
 import { Route as ProjectMembersIndexRouteImport } from './routes/project/members/index'
-import { Route as ProjectApplicationsIndexRouteImport } from './routes/project/applications/index'
+import { Route as ProjectFormsIndexRouteImport } from './routes/project/forms/index'
 import { Route as ProjectAnnouncementsIndexRouteImport } from './routes/project/announcements/index'
 import { Route as CommitteeNoticeIndexRouteImport } from './routes/committee/notice/index'
 import { Route as CommitteeMembersIndexRouteImport } from './routes/committee/members/index'
@@ -71,12 +71,11 @@ const ProjectMembersIndexRoute = ProjectMembersIndexRouteImport.update({
   path: '/members/',
   getParentRoute: () => ProjectRouteRoute,
 } as any)
-const ProjectApplicationsIndexRoute =
-  ProjectApplicationsIndexRouteImport.update({
-    id: '/applications/',
-    path: '/applications/',
-    getParentRoute: () => ProjectRouteRoute,
-  } as any)
+const ProjectFormsIndexRoute = ProjectFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
+  getParentRoute: () => ProjectRouteRoute,
+} as any)
 const ProjectAnnouncementsIndexRoute =
   ProjectAnnouncementsIndexRouteImport.update({
     id: '/announcements/',
@@ -158,7 +157,7 @@ export interface FileRoutesByFullPath {
   '/committee/members': typeof CommitteeMembersIndexRoute
   '/committee/notice': typeof CommitteeNoticeIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
-  '/project/applications': typeof ProjectApplicationsIndexRoute
+  '/project/forms': typeof ProjectFormsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
@@ -179,7 +178,7 @@ export interface FileRoutesByTo {
   '/committee/members': typeof CommitteeMembersIndexRoute
   '/committee/notice': typeof CommitteeNoticeIndexRoute
   '/project/announcements': typeof ProjectAnnouncementsIndexRoute
-  '/project/applications': typeof ProjectApplicationsIndexRoute
+  '/project/forms': typeof ProjectFormsIndexRoute
   '/project/members': typeof ProjectMembersIndexRoute
   '/auth/register/setup': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify': typeof AuthRegisterVerifyIndexRoute
@@ -203,7 +202,7 @@ export interface FileRoutesById {
   '/committee/members/': typeof CommitteeMembersIndexRoute
   '/committee/notice/': typeof CommitteeNoticeIndexRoute
   '/project/announcements/': typeof ProjectAnnouncementsIndexRoute
-  '/project/applications/': typeof ProjectApplicationsIndexRoute
+  '/project/forms/': typeof ProjectFormsIndexRoute
   '/project/members/': typeof ProjectMembersIndexRoute
   '/auth/register/setup/': typeof AuthRegisterSetupIndexRoute
   '/auth/register/verify/': typeof AuthRegisterVerifyIndexRoute
@@ -228,7 +227,7 @@ export interface FileRouteTypes {
     | '/committee/members'
     | '/committee/notice'
     | '/project/announcements'
-    | '/project/applications'
+    | '/project/forms'
     | '/project/members'
     | '/auth/register/setup'
     | '/auth/register/verify'
@@ -249,7 +248,7 @@ export interface FileRouteTypes {
     | '/committee/members'
     | '/committee/notice'
     | '/project/announcements'
-    | '/project/applications'
+    | '/project/forms'
     | '/project/members'
     | '/auth/register/setup'
     | '/auth/register/verify'
@@ -272,7 +271,7 @@ export interface FileRouteTypes {
     | '/committee/members/'
     | '/committee/notice/'
     | '/project/announcements/'
-    | '/project/applications/'
+    | '/project/forms/'
     | '/project/members/'
     | '/auth/register/setup/'
     | '/auth/register/verify/'
@@ -346,11 +345,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectMembersIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
     }
-    '/project/applications/': {
-      id: '/project/applications/'
-      path: '/applications'
-      fullPath: '/project/applications'
-      preLoaderRoute: typeof ProjectApplicationsIndexRouteImport
+    '/project/forms/': {
+      id: '/project/forms/'
+      path: '/forms'
+      fullPath: '/project/forms'
+      preLoaderRoute: typeof ProjectFormsIndexRouteImport
       parentRoute: typeof ProjectRouteRoute
     }
     '/project/announcements/': {
@@ -485,14 +484,14 @@ const CommitteeRouteRouteWithChildren = CommitteeRouteRoute._addFileChildren(
 interface ProjectRouteRouteChildren {
   ProjectIndexRoute: typeof ProjectIndexRoute
   ProjectAnnouncementsIndexRoute: typeof ProjectAnnouncementsIndexRoute
-  ProjectApplicationsIndexRoute: typeof ProjectApplicationsIndexRoute
+  ProjectFormsIndexRoute: typeof ProjectFormsIndexRoute
   ProjectMembersIndexRoute: typeof ProjectMembersIndexRoute
 }
 
 const ProjectRouteRouteChildren: ProjectRouteRouteChildren = {
   ProjectIndexRoute: ProjectIndexRoute,
   ProjectAnnouncementsIndexRoute: ProjectAnnouncementsIndexRoute,
-  ProjectApplicationsIndexRoute: ProjectApplicationsIndexRoute,
+  ProjectFormsIndexRoute: ProjectFormsIndexRoute,
   ProjectMembersIndexRoute: ProjectMembersIndexRoute,
 }
 

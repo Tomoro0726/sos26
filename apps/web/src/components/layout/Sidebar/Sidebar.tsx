@@ -40,9 +40,9 @@ export const projectMenuItems: MenuItem[] = [
 		notificationCount: 3,
 	},
 	{
-		label: "申請管理",
+		label: "フォーム",
 		icon: <FileTextIcon />,
-		to: "/project/applications",
+		to: "/project/forms",
 		notificationCount: 3,
 		//isLocked: true,
 	},

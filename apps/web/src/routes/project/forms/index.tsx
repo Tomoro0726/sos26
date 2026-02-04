@@ -22,7 +22,7 @@ import {
 import styles from "../page.module.scss";
 import applicationsStyles from "./applications.module.scss";
 
-export const Route = createFileRoute("/project/applications/")({
+export const Route = createFileRoute("/project/forms/")({
 	component: ApplicationsPage,
 });
 
@@ -110,7 +110,7 @@ function ApplicationsPage() {
 		<>
 			<div className={styles.page}>
 				<div className={styles.pageHeader}>
-					<Heading size="6">申請フォーム</Heading>
+					<Heading size="6">フォーム</Heading>
 					<Text size="2" color="gray" mt="2">
 						実委人から割り当てられたフォームに回答してください。
 					</Text>

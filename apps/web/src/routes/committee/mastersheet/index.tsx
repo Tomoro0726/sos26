@@ -10,6 +10,7 @@ import {
 import {
 	Badge,
 	Button,
+	Checkbox,
 	Dialog,
 	DropdownMenu,
 	Heading,
@@ -215,6 +216,7 @@ function CommitteeMastersheetPage() {
 	const [createColumnOpen, setCreateColumnOpen] = useState(false);
 	const [loadColumnOpen, setLoadColumnOpen] = useState(false);
 	const [historyPanelOpen, setHistoryPanelOpen] = useState(false);
+	const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
 	const [columnForm, setColumnForm] = useState({
 		name: "",
@@ -358,6 +360,24 @@ function CommitteeMastersheetPage() {
 						<Table.Root>
 							<Table.Header>
 								<Table.Row>
+									<Table.ColumnHeaderCell style={{ width: 40 }}>
+										<Checkbox
+											checked={
+												filteredMastersheet.length > 0 &&
+												selectedItems.size === filteredMastersheet.length
+											}
+											onCheckedChange={checked => {
+												if (checked) {
+													setSelectedItems(
+														new Set(filteredMastersheet.map(s => s.id))
+													);
+												} else {
+													setSelectedItems(new Set());
+												}
+											}}
+											aria-label="全て選択"
+										/>
+									</Table.ColumnHeaderCell>
 									<Table.ColumnHeaderCell>
 										<div className={styles.headerCell}>
 											<Text>企画名</Text>
@@ -408,6 +428,23 @@ function CommitteeMastersheetPage() {
 							<Table.Body>
 								{filteredMastersheet.map(sheet => (
 									<Table.Row key={sheet.id}>
+										<Table.Cell>
+											<Checkbox
+												checked={selectedItems.has(sheet.id)}
+												onCheckedChange={checked => {
+													setSelectedItems(prev => {
+														const next = new Set(prev);
+														if (checked) {
+															next.add(sheet.id);
+														} else {
+															next.delete(sheet.id);
+														}
+														return next;
+													});
+												}}
+												aria-label={`${sheet.name}を選択`}
+											/>
+										</Table.Cell>
 										<Table.Cell>
 											<div className={styles.projectName}>
 												{sheet.icon && (
