@@ -1,5 +1,6 @@
 import {
 	ArrowUpIcon,
+	Cross2Icon,
 	MagnifyingGlassIcon,
 	MixerVerticalIcon,
 	PlusIcon,
@@ -171,6 +172,12 @@ function CommitteeFormsPage() {
 		new Set()
 	);
 	const [projectSearchQuery, setProjectSearchQuery] = useState("");
+	const [shareDialogOpen, setShareDialogOpen] = useState(false);
+	const [sharingFormId, setSharingFormId] = useState<string | null>(null);
+	const [shareEmail, setShareEmail] = useState("");
+	const [sharedEmails, setSharedEmails] = useState<string[]>([]);
+
+	const sharingForm = dummyForms.find(f => f.id === sharingFormId);
 
 	const filteredProjects = dummyProjects.filter(
 		project =>
@@ -189,6 +196,30 @@ function CommitteeFormsPage() {
 		setSendDialogOpen(false);
 		setSelectedFormName(sendingFormName);
 		setNotificationOpen(true);
+	};
+
+	const handleOpenShare = (formId: string) => {
+		setSharingFormId(formId);
+		setShareEmail("");
+		setSharedEmails([]);
+		setShareDialogOpen(true);
+	};
+
+	const handleAddShareEmail = () => {
+		if (shareEmail && !sharedEmails.includes(shareEmail)) {
+			setSharedEmails([...sharedEmails, shareEmail]);
+			setShareEmail("");
+		}
+	};
+
+	const handleRemoveShareEmail = (email: string) => {
+		setSharedEmails(sharedEmails.filter(e => e !== email));
+	};
+
+	const handleConfirmShare = () => {
+		// TODO: 共有API呼び出し
+		setShareDialogOpen(false);
+		setSharingFormId(null);
 	};
 
 	const handleEdit = (form: Form) => {
@@ -448,6 +479,11 @@ function CommitteeFormsPage() {
 												<DropdownMenu.Item onClick={() => handleEdit(form)}>
 													編集
 												</DropdownMenu.Item>
+												<DropdownMenu.Item
+													onClick={() => handleOpenShare(form.id)}
+												>
+													共有
+												</DropdownMenu.Item>
 												<DropdownMenu.Item>結果を見る</DropdownMenu.Item>
 												<DropdownMenu.Item
 													onClick={() => handleSubmit(form.name)}
@@ -682,6 +718,152 @@ function CommitteeFormsPage() {
 						<Dialog.Close>
 							<Button>OK</Button>
 						</Dialog.Close>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
+			{/* 共有ダイアログ */}
+			<Dialog.Root open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+				<Dialog.Content style={{ maxWidth: 500 }}>
+					<Dialog.Title>フォームを共有</Dialog.Title>
+					<Dialog.Description>
+						「{sharingForm?.name}
+						」を共有するユーザーのメールアドレスを入力してください。
+					</Dialog.Description>
+
+					<div style={{ marginTop: "var(--space-4)" }}>
+						{/* 現在の共有者 */}
+						{sharingForm && sharingForm.sharedWith.length > 0 && (
+							<div style={{ marginBottom: "var(--space-4)" }}>
+								<Text
+									size="2"
+									weight="medium"
+									style={{ display: "block", marginBottom: "var(--space-2)" }}
+								>
+									現在の共有者
+								</Text>
+								<div
+									style={{
+										display: "flex",
+										flexWrap: "wrap",
+										gap: "var(--space-2)",
+									}}
+								>
+									{sharingForm.sharedWith.map(user => (
+										<Badge key={user.id} variant="soft" size="2">
+											<img
+												src={`/dummy/user-icons/${user.id}.png`}
+												alt={user.name}
+												role="presentation"
+												style={{ width: 16, height: 16, borderRadius: "50%" }}
+												onError={e => {
+													(e.target as HTMLImageElement).src =
+														"/dummy/user-icons/default.png";
+												}}
+											/>
+											{user.name}
+										</Badge>
+									))}
+								</div>
+							</div>
+						)}
+
+						{/* メールアドレス入力 */}
+						<div style={{ marginBottom: "var(--space-3)" }}>
+							<Text
+								size="2"
+								weight="medium"
+								style={{ display: "block", marginBottom: "var(--space-2)" }}
+							>
+								新しい共有者を追加
+							</Text>
+							<div style={{ display: "flex", gap: "var(--space-2)" }}>
+								<TextField.Root
+									type="email"
+									placeholder="user@example.com"
+									value={shareEmail}
+									onChange={e => setShareEmail(e.target.value)}
+									onKeyDown={e => {
+										if (e.key === "Enter") {
+											e.preventDefault();
+											handleAddShareEmail();
+										}
+									}}
+									style={{ flex: 1 }}
+								/>
+								<Button onClick={handleAddShareEmail} disabled={!shareEmail}>
+									追加
+								</Button>
+							</div>
+						</div>
+
+						{/* 追加したメールアドレス一覧 */}
+						{sharedEmails.length > 0 && (
+							<div style={{ marginBottom: "var(--space-3)" }}>
+								<Text
+									size="2"
+									weight="medium"
+									style={{ display: "block", marginBottom: "var(--space-2)" }}
+								>
+									追加する共有者
+								</Text>
+								<div
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										gap: "var(--space-2)",
+									}}
+								>
+									{sharedEmails.map(email => (
+										<div
+											key={email}
+											style={{
+												display: "flex",
+												alignItems: "center",
+												justifyContent: "space-between",
+												padding: "var(--space-2) var(--space-3)",
+												backgroundColor: "var(--gray-a2)",
+												borderRadius: "var(--radius-2)",
+											}}
+										>
+											<Text size="2">{email}</Text>
+											<IconButton
+												variant="ghost"
+												size="1"
+												color="red"
+												onClick={() => handleRemoveShareEmail(email)}
+												aria-label="削除"
+											>
+												<Cross2Icon width={14} height={14} />
+											</IconButton>
+										</div>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "flex-end",
+							gap: "var(--space-2)",
+							marginTop: "var(--space-4)",
+							paddingTop: "var(--space-4)",
+							borderTop: "1px solid var(--gray-a4)",
+						}}
+					>
+						<Dialog.Close>
+							<Button variant="soft" color="gray">
+								キャンセル
+							</Button>
+						</Dialog.Close>
+						<Button
+							disabled={sharedEmails.length === 0}
+							onClick={handleConfirmShare}
+						>
+							共有する
+						</Button>
 					</div>
 				</Dialog.Content>
 			</Dialog.Root>
