@@ -86,9 +86,10 @@ export function FormEditDialog({
 	const handleMoveDown = (index: number) => {
 		if (index < items.length - 1 && items[index] && items[index + 1]) {
 			const newItems = [...items];
-			const temp = newItems[index];
-			if (temp && newItems[index + 1]) {
-				newItems[index] = newItems[index + 1];
+			const temp = newItems[index] as FormItem;
+			const nextItem = newItems[index + 1] as FormItem;
+			if (temp && nextItem) {
+				newItems[index] = nextItem;
 				newItems[index + 1] = temp;
 				setItems(newItems);
 			}
