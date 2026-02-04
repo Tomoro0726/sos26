@@ -11,6 +11,7 @@ import {
 	Flex,
 	Heading,
 	IconButton,
+	Switch,
 	Text,
 	TextField,
 } from "@radix-ui/themes";
@@ -55,6 +56,13 @@ export function FormEditDialog({
 }: FormEditDialogProps) {
 	const [formName, setFormName] = useState(form?.name || "");
 	const [items, setItems] = useState<FormItem[]>(form?.items || []);
+	const [scheduledSendEnabled, setScheduledSendEnabled] = useState(false);
+	const [scheduledSendDate, setScheduledSendDate] = useState("");
+	const [scheduledSendTime, setScheduledSendTime] = useState("");
+	const [deadlineEnabled, setDeadlineEnabled] = useState(false);
+	const [deadlineDate, setDeadlineDate] = useState("");
+	const [deadlineTime, setDeadlineTime] = useState("");
+	const [allowLateResponse, setAllowLateResponse] = useState(false);
 
 	const handleAddItem = () => {
 		const newItem: FormItem = {
@@ -328,6 +336,116 @@ export function FormEditDialog({
 								<PlusIcon width={16} height={16} />
 								項目を追加
 							</Button>
+						</div>
+
+						{/* 送信設定セクション */}
+						<div className={styles.sendSettingsSection}>
+							<Heading size="3">送信設定</Heading>
+
+							{/* 予約送信 */}
+							<div className={styles.settingItem}>
+								<div className={styles.settingHeader}>
+									<div>
+										<Text weight="medium">予約送信</Text>
+										<Text size="1" color="gray" style={{ display: "block" }}>
+											指定した日時にフォームを自動送信します
+										</Text>
+									</div>
+									<Switch
+										checked={scheduledSendEnabled}
+										onCheckedChange={setScheduledSendEnabled}
+									/>
+								</div>
+								{scheduledSendEnabled && (
+									<div className={styles.dateTimeInputs}>
+										<div className={styles.dateTimeField}>
+											<label htmlFor="scheduled-date" className={styles.label}>
+												日付
+											</label>
+											<input
+												id="scheduled-date"
+												type="date"
+												value={scheduledSendDate}
+												onChange={e => setScheduledSendDate(e.target.value)}
+												className={styles.dateInput}
+											/>
+										</div>
+										<div className={styles.dateTimeField}>
+											<label htmlFor="scheduled-time" className={styles.label}>
+												時刻
+											</label>
+											<input
+												id="scheduled-time"
+												type="time"
+												value={scheduledSendTime}
+												onChange={e => setScheduledSendTime(e.target.value)}
+												className={styles.timeInput}
+											/>
+										</div>
+									</div>
+								)}
+							</div>
+
+							{/* 締め切り */}
+							<div className={styles.settingItem}>
+								<div className={styles.settingHeader}>
+									<div>
+										<Text weight="medium">締め切り日時</Text>
+										<Text size="1" color="gray" style={{ display: "block" }}>
+											回答の締め切り日時を設定します
+										</Text>
+									</div>
+									<Switch
+										checked={deadlineEnabled}
+										onCheckedChange={setDeadlineEnabled}
+									/>
+								</div>
+								{deadlineEnabled && (
+									<div className={styles.dateTimeInputs}>
+										<div className={styles.dateTimeField}>
+											<label htmlFor="deadline-date" className={styles.label}>
+												日付
+											</label>
+											<input
+												id="deadline-date"
+												type="date"
+												value={deadlineDate}
+												onChange={e => setDeadlineDate(e.target.value)}
+												className={styles.dateInput}
+											/>
+										</div>
+										<div className={styles.dateTimeField}>
+											<label htmlFor="deadline-time" className={styles.label}>
+												時刻
+											</label>
+											<input
+												id="deadline-time"
+												type="time"
+												value={deadlineTime}
+												onChange={e => setDeadlineTime(e.target.value)}
+												className={styles.timeInput}
+											/>
+										</div>
+									</div>
+								)}
+							</div>
+
+							{/* 遅延回答の許可 */}
+							<div className={styles.settingItem}>
+								<div className={styles.settingHeader}>
+									<div>
+										<Text weight="medium">遅延回答の許可</Text>
+										<Text size="1" color="gray" style={{ display: "block" }}>
+											締め切り後も回答を受け付けます
+										</Text>
+									</div>
+									<Switch
+										checked={allowLateResponse}
+										onCheckedChange={setAllowLateResponse}
+										disabled={!deadlineEnabled}
+									/>
+								</div>
+							</div>
 						</div>
 
 						{/* ボタン */}

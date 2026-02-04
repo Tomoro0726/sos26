@@ -181,6 +181,61 @@
 	background-color: var(--gray-a1);
 }
 
+.sendSettingsSection {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	background-color: var(--gray-a1);
+	border-radius: 8px;
+	border: 1px solid var(--gray-a4);
+}
+
+.settingItem {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px;
+	background-color: var(--white-a1);
+	border-radius: 6px;
+	border: 1px solid var(--gray-a3);
+}
+
+.settingHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 16px;
+}
+
+.dateTimeInputs {
+	display: flex;
+	gap: 12px;
+}
+
+.dateTimeField {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
+}
+
+.dateInput,
+.timeInput {
+	padding: 8px 12px;
+	border: 1px solid var(--gray-a6);
+	border-radius: 6px;
+	background-color: var(--white-a1);
+	font-size: 14px;
+	width: 100%;
+
+	&:focus {
+		outline: none;
+		border-color: var(--blue-a7);
+		box-shadow: 0 0 0 2px var(--blue-a3);
+	}
+}
+
 .dialogFooter {
 	border-top: 1px solid var(--gray-a4);
 	padding-top: 16px;

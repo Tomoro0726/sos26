@@ -7,6 +7,7 @@ import {
 import {
 	Badge,
 	Button,
+	Checkbox,
 	Dialog,
 	DropdownMenu,
 	Heading,
@@ -90,6 +91,60 @@ const dummyForms: Form[] = [
 	},
 ];
 
+// 送信対象企画のダミーデータ
+interface Project {
+	id: string;
+	name: string;
+	category: "出店" | "パフォーマンス" | "飲食" | "展示" | "その他";
+	updatedAt: string;
+	icon?: string;
+}
+
+const dummyProjects: Project[] = [
+	{
+		id: "1",
+		name: "たこやき屋",
+		category: "飲食",
+		updatedAt: "2026-02-03",
+		icon: "/dummy/project-icons/1.png",
+	},
+	{
+		id: "2",
+		name: "バスケ部展示",
+		category: "展示",
+		updatedAt: "2026-02-02",
+		icon: "/dummy/project-icons/2.png",
+	},
+	{
+		id: "3",
+		name: "メイド喫茶",
+		category: "飲食",
+		updatedAt: "2026-02-01",
+		icon: "/dummy/project-icons/3.png",
+	},
+	{
+		id: "4",
+		name: "学園祭ライブ",
+		category: "パフォーマンス",
+		updatedAt: "2026-01-31",
+		icon: "/dummy/project-icons/4.png",
+	},
+	{
+		id: "5",
+		name: "美術部作品展",
+		category: "展示",
+		updatedAt: "2026-01-30",
+		icon: "/dummy/project-icons/5.png",
+	},
+	{
+		id: "6",
+		name: "軽音部ライブ",
+		category: "パフォーマンス",
+		updatedAt: "2026-01-29",
+		icon: "/dummy/project-icons/6.png",
+	},
+];
+
 function getStatusColor(
 	status: FormStatus
 ): "gray" | "blue" | "green" | "orange" {
@@ -110,9 +165,29 @@ function CommitteeFormsPage() {
 	const [selectedFormName, setSelectedFormName] = useState("");
 	const [editingForm, setEditingForm] = useState<FormModel | null>(null);
 	const [isCreatingNew, setIsCreatingNew] = useState(false);
+	const [sendDialogOpen, setSendDialogOpen] = useState(false);
+	const [sendingFormName, setSendingFormName] = useState("");
+	const [selectedProjects, setSelectedProjects] = useState<Set<string>>(
+		new Set()
+	);
+	const [projectSearchQuery, setProjectSearchQuery] = useState("");
+
+	const filteredProjects = dummyProjects.filter(
+		project =>
+			project.name.toLowerCase().includes(projectSearchQuery.toLowerCase()) ||
+			project.category.includes(projectSearchQuery)
+	);
 
 	const handleSubmit = (formName: string) => {
-		setSelectedFormName(formName);
+		setSendingFormName(formName);
+		setSelectedProjects(new Set());
+		setProjectSearchQuery("");
+		setSendDialogOpen(true);
+	};
+
+	const handleConfirmSend = () => {
+		setSendDialogOpen(false);
+		setSelectedFormName(sendingFormName);
 		setNotificationOpen(true);
 	};
 
@@ -389,13 +464,217 @@ function CommitteeFormsPage() {
 				</div>
 			</div>
 
+			{/* 送信対象企画選択ダイアログ */}
+			<Dialog.Root open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
+				<Dialog.Content style={{ maxWidth: "90vw", width: 1200 }}>
+					<Dialog.Title>送信対象の企画を選択</Dialog.Title>
+					<Dialog.Description>
+						「{sendingFormName}」を送信する企画を選択してください。
+					</Dialog.Description>
+
+					<div style={{ marginTop: "var(--space-4)" }}>
+						<div style={{ marginBottom: "var(--space-3)" }}>
+							<TextField.Root
+								placeholder="企画名やカテゴリーで検索..."
+								value={projectSearchQuery}
+								onChange={e => setProjectSearchQuery(e.target.value)}
+							>
+								<TextField.Slot side="left">
+									<MagnifyingGlassIcon height="16" width="16" />
+								</TextField.Slot>
+							</TextField.Root>
+						</div>
+
+						<div
+							style={{
+								maxHeight: "60vh",
+								overflowY: "auto",
+								border: "1px solid var(--gray-a4)",
+								borderRadius: "var(--radius-2)",
+							}}
+						>
+							<Table.Root>
+								<Table.Header>
+									<Table.Row>
+										<Table.ColumnHeaderCell style={{ width: 40 }}>
+											<Checkbox
+												checked={
+													filteredProjects.length > 0 &&
+													selectedProjects.size === filteredProjects.length
+												}
+												onCheckedChange={checked => {
+													if (checked) {
+														setSelectedProjects(
+															new Set(filteredProjects.map(p => p.id))
+														);
+													} else {
+														setSelectedProjects(new Set());
+													}
+												}}
+												aria-label="全て選択"
+											/>
+										</Table.ColumnHeaderCell>
+										<Table.ColumnHeaderCell>
+											<div className={styles.headerCell}>
+												<Text>企画名</Text>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="ソート"
+												>
+													<ArrowUpIcon width={14} height={14} />
+												</IconButton>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="フィルター"
+												>
+													<MixerVerticalIcon width={14} height={14} />
+												</IconButton>
+											</div>
+										</Table.ColumnHeaderCell>
+										<Table.ColumnHeaderCell>
+											<div className={styles.headerCell}>
+												<Text>カテゴリー</Text>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="ソート"
+												>
+													<ArrowUpIcon width={14} height={14} />
+												</IconButton>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="フィルター"
+												>
+													<MixerVerticalIcon width={14} height={14} />
+												</IconButton>
+											</div>
+										</Table.ColumnHeaderCell>
+										<Table.ColumnHeaderCell>
+											<div className={styles.headerCell}>
+												<Text>更新日</Text>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="ソート"
+												>
+													<ArrowUpIcon width={14} height={14} />
+												</IconButton>
+												<IconButton
+													variant="ghost"
+													size="1"
+													aria-label="フィルター"
+												>
+													<MixerVerticalIcon width={14} height={14} />
+												</IconButton>
+											</div>
+										</Table.ColumnHeaderCell>
+									</Table.Row>
+								</Table.Header>
+								<Table.Body>
+									{filteredProjects.map(project => (
+										<Table.Row key={project.id}>
+											<Table.Cell>
+												<Checkbox
+													checked={selectedProjects.has(project.id)}
+													onCheckedChange={checked => {
+														setSelectedProjects(prev => {
+															const next = new Set(prev);
+															if (checked) {
+																next.add(project.id);
+															} else {
+																next.delete(project.id);
+															}
+															return next;
+														});
+													}}
+													aria-label={`${project.name}を選択`}
+												/>
+											</Table.Cell>
+											<Table.Cell>
+												<div
+													style={{
+														display: "flex",
+														alignItems: "center",
+														gap: "var(--space-2)",
+													}}
+												>
+													{project.icon && (
+														<img
+															src={project.icon}
+															alt={project.name}
+															role="presentation"
+															style={{
+																width: "24px",
+																height: "24px",
+																borderRadius: "var(--radius-2)",
+																objectFit: "cover",
+															}}
+															onError={e => {
+																(e.target as HTMLImageElement).src =
+																	"/dummy/project-icons/default.png";
+															}}
+														/>
+													)}
+													<Text size="2">{project.name}</Text>
+												</div>
+											</Table.Cell>
+											<Table.Cell>
+												<Badge variant="soft">{project.category}</Badge>
+											</Table.Cell>
+											<Table.Cell>
+												<Text size="2" color="gray">
+													{project.updatedAt}
+												</Text>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Root>
+						</div>
+					</div>
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							marginTop: "var(--space-4)",
+							paddingTop: "var(--space-4)",
+							borderTop: "1px solid var(--gray-a4)",
+						}}
+					>
+						<Text size="2" color="gray">
+							{selectedProjects.size > 0 &&
+								`${selectedProjects.size}件の企画を選択中`}
+						</Text>
+						<div style={{ display: "flex", gap: "var(--space-2)" }}>
+							<Dialog.Close>
+								<Button variant="soft" color="gray">
+									キャンセル
+								</Button>
+							</Dialog.Close>
+							<Button
+								disabled={selectedProjects.size === 0}
+								onClick={handleConfirmSend}
+							>
+								送信して承認を求める
+							</Button>
+						</div>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
 			<Dialog.Root open={notificationOpen} onOpenChange={setNotificationOpen}>
 				<Dialog.Content style={{ maxWidth: 450 }}>
 					<Dialog.Title>フォーム送信完了</Dialog.Title>
 					<Dialog.Description>
 						<div>
 							<Text>
-								「{selectedFormName}」をあなたの所属の責任者に承認を求めました。
+								「{selectedFormName}」を{selectedProjects.size}
+								件の企画に送信し、責任者に承認を求めました。
 							</Text>
 						</div>
 					</Dialog.Description>
