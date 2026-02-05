@@ -6,30 +6,29 @@ on:
   pull_request_review_comment:
     types: [created]
   issues:
-    types: [opened, assigned]
+    types: [opened]
 
 jobs:
   claude:
-    # @claudeメンションがある場合のみ実行
     if: |
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
       issues: write
       id-token: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
-      - name: Read review prompt
-        id: review-prompt
+      - name: Load review prompt
+        id: review_prompt
         run: |
           {
             echo 'content<<EOF'
@@ -41,6 +40,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: ${{ steps.review_prompt.outputs.content }}
           claude_args: |
             --max-turns 10
-            --append-system-prompt "${{ steps.review-prompt.outputs.content }}"
