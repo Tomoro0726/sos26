@@ -1,6 +1,7 @@
 import { Heading, Text } from "@radix-ui/themes";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/primitives";
+import styles from "./forbidden.module.scss";
 
 export const Route = createFileRoute("/forbidden/")({
 	component: ForbiddenPage,
@@ -17,18 +18,7 @@ export const Route = createFileRoute("/forbidden/")({
 
 function ForbiddenPage() {
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				alignItems: "center",
-				justifyContent: "center",
-				minHeight: "50vh",
-				padding: "2rem",
-				textAlign: "center",
-				gap: "1rem",
-			}}
-		>
+		<div className={styles.container}>
 			<Heading size="8" color="red">
 				403
 			</Heading>
@@ -36,7 +26,7 @@ function ForbiddenPage() {
 			<Text color="gray">
 				このページを表示する権限がないか、アカウントが無効化されています。
 			</Text>
-			<div style={{ marginTop: "1rem" }}>
+			<div className={styles.actions}>
 				<Link to="/">
 					<Button>ホームに戻る</Button>
 				</Link>
