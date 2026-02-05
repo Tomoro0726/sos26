@@ -10,7 +10,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Button, TextField } from "@/components/primitives";
 import { register } from "@/lib/api/auth";
-import { useAuth } from "@/lib/auth";
+import { useAuthStore } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { isFirebaseError, mapFirebaseAuthError } from "@/lib/firebaseError";
 import { isClientError } from "@/lib/http/error";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/auth/register/setup/")({
 
 function SetupPage() {
 	const navigate = useNavigate();
-	const { refreshUser, isLoggedIn } = useAuth();
+	const { refreshUser, isLoggedIn } = useAuthStore();
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
