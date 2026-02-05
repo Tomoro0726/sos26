@@ -1,7 +1,9 @@
 import { createRootRoute, HeadContent, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { authReady } from "@/lib/auth";
 
 export const Route = createRootRoute({
+	beforeLoad: () => authReady(),
 	component: RootComponent,
 	errorComponent: ErrorComponent,
 	notFoundComponent: NotFoundComponent,
