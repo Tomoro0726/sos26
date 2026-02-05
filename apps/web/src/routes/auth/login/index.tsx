@@ -37,7 +37,8 @@ function LoginPage() {
 	// ログイン後のリダイレクト先（バリデーション済み）
 	const redirectTo = sanitizeReturnTo(returnTo);
 
-	// 既にログイン済みならリダイレクト（副作用で実施）
+	// ログイン成功後に returnTo へリダイレクト
+	// （beforeLoad は "/" へリダイレクトするため、returnTo 対応はここで行う）
 	useEffect(() => {
 		if (isLoggedIn) {
 			navigate({ to: redirectTo });

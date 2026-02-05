@@ -7,7 +7,7 @@ import {
 } from "@sos26/shared";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, TextField } from "@/components/primitives";
 import { register } from "@/lib/api/auth";
 import { useAuthStore } from "@/lib/auth";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/auth/register/setup/")({
 
 function SetupPage() {
 	const navigate = useNavigate();
-	const { refreshUser, isLoggedIn } = useAuthStore();
+	const { refreshUser } = useAuthStore();
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -37,13 +37,6 @@ function SetupPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [sessionExpired, setSessionExpired] = useState(false);
-
-	// 既にログイン済みならホームへ
-	useEffect(() => {
-		if (isLoggedIn) {
-			navigate({ to: "/" });
-		}
-	}, [isLoggedIn, navigate]);
 
 	const validate = (): string | null => {
 		const lastNameResult = lastNameSchema.safeParse(lastName);

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectRouteRouteImport } from './routes/project/route'
 import { Route as CommitteeRouteRouteImport } from './routes/committee/route'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as ProjectIndexRouteImport } from './routes/project/index'
@@ -31,6 +32,11 @@ const ProjectRouteRoute = ProjectRouteRouteImport.update({
 const CommitteeRouteRoute = CommitteeRouteRouteImport.update({
   id: '/committee',
   path: '/committee',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -59,19 +65,19 @@ const CommitteeIndexRoute = CommitteeIndexRouteImport.update({
   getParentRoute: () => CommitteeRouteRoute,
 } as any)
 const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
-  id: '/auth/reset-password/',
-  path: '/auth/reset-password/',
-  getParentRoute: () => rootRouteImport,
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
-  id: '/auth/register/',
-  path: '/auth/register/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
-  id: '/auth/login/',
-  path: '/auth/login/',
-  getParentRoute: () => rootRouteImport,
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const DevUiComponentsIndexRoute = DevUiComponentsIndexRouteImport.update({
   id: '/dev/ui/components/',
@@ -79,18 +85,19 @@ const DevUiComponentsIndexRoute = DevUiComponentsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterVerifyIndexRoute = AuthRegisterVerifyIndexRouteImport.update({
-  id: '/auth/register/verify/',
-  path: '/auth/register/verify/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/verify/',
+  path: '/register/verify/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterSetupIndexRoute = AuthRegisterSetupIndexRouteImport.update({
-  id: '/auth/register/setup/',
-  path: '/auth/register/setup/',
-  getParentRoute: () => rootRouteImport,
+  id: '/register/setup/',
+  path: '/register/setup/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/committee': typeof CommitteeRouteRouteWithChildren
   '/project': typeof ProjectRouteRouteWithChildren
   '/committee/': typeof CommitteeIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/committee': typeof CommitteeIndexRoute
   '/forbidden': typeof ForbiddenIndexRoute
   '/project': typeof ProjectIndexRoute
@@ -120,6 +128,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/committee': typeof CommitteeRouteRouteWithChildren
   '/project': typeof ProjectRouteRouteWithChildren
   '/committee/': typeof CommitteeIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/committee'
     | '/project'
     | '/committee/'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/committee'
     | '/forbidden'
     | '/project'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/committee'
     | '/project'
     | '/committee/'
@@ -181,15 +193,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   CommitteeRouteRoute: typeof CommitteeRouteRouteWithChildren
   ProjectRouteRoute: typeof ProjectRouteRouteWithChildren
   ForbiddenIndexRoute: typeof ForbiddenIndexRoute
   SearchIndexRoute: typeof SearchIndexRoute
-  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
-  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
-  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
-  AuthRegisterSetupIndexRoute: typeof AuthRegisterSetupIndexRoute
-  AuthRegisterVerifyIndexRoute: typeof AuthRegisterVerifyIndexRoute
   DevUiComponentsIndexRoute: typeof DevUiComponentsIndexRoute
 }
 
@@ -207,6 +215,13 @@ declare module '@tanstack/react-router' {
       path: '/committee'
       fullPath: '/committee'
       preLoaderRoute: typeof CommitteeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -246,24 +261,24 @@ declare module '@tanstack/react-router' {
     }
     '/auth/reset-password/': {
       id: '/auth/reset-password/'
-      path: '/auth/reset-password'
+      path: '/reset-password'
       fullPath: '/auth/reset-password'
       preLoaderRoute: typeof AuthResetPasswordIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/register/': {
       id: '/auth/register/'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/login/': {
       id: '/auth/login/'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/dev/ui/components/': {
       id: '/dev/ui/components/'
@@ -274,20 +289,40 @@ declare module '@tanstack/react-router' {
     }
     '/auth/register/verify/': {
       id: '/auth/register/verify/'
-      path: '/auth/register/verify'
+      path: '/register/verify'
       fullPath: '/auth/register/verify'
       preLoaderRoute: typeof AuthRegisterVerifyIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/register/setup/': {
       id: '/auth/register/setup/'
-      path: '/auth/register/setup'
+      path: '/register/setup'
       fullPath: '/auth/register/setup'
       preLoaderRoute: typeof AuthRegisterSetupIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
+
+interface AuthRouteRouteChildren {
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
+  AuthRegisterSetupIndexRoute: typeof AuthRegisterSetupIndexRoute
+  AuthRegisterVerifyIndexRoute: typeof AuthRegisterVerifyIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
+  AuthRegisterSetupIndexRoute: AuthRegisterSetupIndexRoute,
+  AuthRegisterVerifyIndexRoute: AuthRegisterVerifyIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
 
 interface CommitteeRouteRouteChildren {
   CommitteeIndexRoute: typeof CommitteeIndexRoute
@@ -315,15 +350,11 @@ const ProjectRouteRouteWithChildren = ProjectRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   CommitteeRouteRoute: CommitteeRouteRouteWithChildren,
   ProjectRouteRoute: ProjectRouteRouteWithChildren,
   ForbiddenIndexRoute: ForbiddenIndexRoute,
   SearchIndexRoute: SearchIndexRoute,
-  AuthLoginIndexRoute: AuthLoginIndexRoute,
-  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
-  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
-  AuthRegisterSetupIndexRoute: AuthRegisterSetupIndexRoute,
-  AuthRegisterVerifyIndexRoute: AuthRegisterVerifyIndexRoute,
   DevUiComponentsIndexRoute: DevUiComponentsIndexRoute,
 }
 export const routeTree = rootRouteImport
