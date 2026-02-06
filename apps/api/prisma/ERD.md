@@ -43,6 +43,7 @@ erDiagram
   ProjectType type
   String ownerId FK
   String subOwnerId FK "nullable"
+  String(6) inviteCode UK
   DateTime deletedAt "nullable"
   DateTime createdAt
   DateTime updatedAt
@@ -54,10 +55,19 @@ erDiagram
   DateTime joinedAt
   DateTime deletedAt "nullable"
 }
+"CommitteeMember" {
+  String id PK
+  String userId FK,UK
+  Boolean isExecutive
+  Bureau Bureau
+  DateTime joinedAt
+  DateTime deletedAt "nullable"
+}
 "Project" }o--|| "User" : owner
 "Project" }o--o| "User" : subOwner
 "ProjectMember" }o--|| "Project" : project
 "ProjectMember" }o--|| "User" : user
+"CommitteeMember" |o--|| "User" : user
 ```
 
 ### `EmailVerification`
@@ -107,6 +117,7 @@ Properties as follows:
 - `type`:
 - `ownerId`:
 - `subOwnerId`:
+- `inviteCode`:
 - `deletedAt`:
 - `createdAt`:
 - `updatedAt`:
@@ -118,5 +129,16 @@ Properties as follows:
 - `id`:
 - `projectId`:
 - `userId`:
+- `joinedAt`:
+- `deletedAt`:
+
+### `CommitteeMember`
+
+Properties as follows:
+
+- `id`:
+- `userId`:
+- `isExecutive`:
+- `Bureau`:
 - `joinedAt`:
 - `deletedAt`:
