@@ -1,0 +1,9 @@
+.wrapper {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	border: 2px solid var(--committee-color);
+	overflow: hidden;
+	flex-shrink: 0;
+}

@@ -1,5 +1,5 @@
 import { Badge, Separator, Text } from "@radix-ui/themes";
-import type { GetNoticeResponse } from "@sos26/shared";
+import type { Bureau, GetNoticeResponse } from "@sos26/shared";
 import {
 	IconCheck,
 	IconPlus,
@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import Avatar from "boring-avatars";
 import { useState } from "react";
+import { CommitteeAvatar } from "@/components/patterns";
 import { Button, IconButton } from "@/components/primitives";
 import { formatDate } from "@/lib/format";
 import { AddCollaboratorDialog } from "./AddCollaboratorDialog";
@@ -20,11 +21,20 @@ type NoticeDetail = GetNoticeResponse["notice"];
 type AvailableMember = {
 	userId: string;
 	name: string;
+	bureau: Bureau;
+	isExecutive: boolean;
 };
 
 type Approver = {
 	userId: string;
 	name: string;
+	bureau: Bureau;
+	isExecutive: boolean;
+};
+
+type CommitteeMemberInfo = {
+	bureau: Bureau;
+	isExecutive: boolean;
 };
 
 type Props = {
@@ -35,6 +45,7 @@ type Props = {
 	canEdit: boolean;
 	availableMembers: AvailableMember[];
 	approvers: Approver[];
+	committeeMemberMap: Record<string, CommitteeMemberInfo>;
 	removingId: string | null;
 	onAddCollaborator: (userId: string) => Promise<void>;
 	onRemoveCollaborator: (collaboratorId: string) => void;
@@ -53,6 +64,7 @@ export function NoticeDetailSidebar({
 	canEdit,
 	availableMembers,
 	approvers,
+	committeeMemberMap,
 	removingId,
 	onAddCollaborator,
 	onRemoveCollaborator,
@@ -92,7 +104,16 @@ export function NoticeDetailSidebar({
 							オーナー
 						</Text>
 						<div className={styles.ownerItem}>
-							<Avatar size={32} name={notice.owner.name} variant="beam" />
+							{committeeMemberMap[notice.ownerId] ? (
+								<CommitteeAvatar
+									size={32}
+									name={notice.owner.name}
+									bureau={committeeMemberMap[notice.ownerId].bureau}
+									isExecutive={committeeMemberMap[notice.ownerId].isExecutive}
+								/>
+							) : (
+								<Avatar size={32} name={notice.owner.name} variant="beam" />
+							)}
 							<Text size="2" weight="medium">
 								{notice.owner.name}
 							</Text>
@@ -121,7 +142,16 @@ export function NoticeDetailSidebar({
 							<div className={styles.collaboratorList}>
 								{notice.collaborators.map(c => (
 									<div key={c.id} className={styles.collaboratorItem}>
-										<Avatar size={24} name={c.user.name} variant="beam" />
+										{committeeMemberMap[c.user.id] ? (
+											<CommitteeAvatar
+												size={24}
+												name={c.user.name}
+												bureau={committeeMemberMap[c.user.id].bureau}
+												isExecutive={committeeMemberMap[c.user.id].isExecutive}
+											/>
+										) : (
+											<Avatar size={24} name={c.user.name} variant="beam" />
+										)}
 										<Text size="2">{c.user.name}</Text>
 										{isOwner && (
 											<IconButton
@@ -194,6 +224,7 @@ export function NoticeDetailSidebar({
 								isApprover={isApprover}
 								approvingId={approvingId}
 								rejectingId={rejectingId}
+								committeeMemberMap={committeeMemberMap}
 								onApprove={async id => {
 									setApprovingId(id);
 									try {
@@ -240,6 +271,7 @@ type AuthDetailSectionProps = {
 	isApprover: boolean;
 	approvingId: string | null;
 	rejectingId: string | null;
+	committeeMemberMap: Record<string, CommitteeMemberInfo>;
 	onApprove: (id: string) => void;
 	onReject: (id: string) => void;
 };
@@ -250,6 +282,7 @@ function AuthDetailSection({
 	isApprover,
 	approvingId,
 	rejectingId,
+	committeeMemberMap,
 	onApprove,
 	onReject,
 }: AuthDetailSectionProps) {
@@ -268,7 +301,16 @@ function AuthDetailSection({
 					申請者
 				</Text>
 				<div className={styles.authPerson}>
-					<Avatar size={20} name={auth.requestedBy.name} variant="beam" />
+					{committeeMemberMap[auth.requestedById] ? (
+						<CommitteeAvatar
+							size={20}
+							name={auth.requestedBy.name}
+							bureau={committeeMemberMap[auth.requestedById].bureau}
+							isExecutive={committeeMemberMap[auth.requestedById].isExecutive}
+						/>
+					) : (
+						<Avatar size={20} name={auth.requestedBy.name} variant="beam" />
+					)}
 					<Text size="2">{auth.requestedBy.name}</Text>
 				</div>
 			</div>
@@ -277,7 +319,16 @@ function AuthDetailSection({
 					承認者
 				</Text>
 				<div className={styles.authPerson}>
-					<Avatar size={20} name={auth.requestedTo.name} variant="beam" />
+					{committeeMemberMap[auth.requestedToId] ? (
+						<CommitteeAvatar
+							size={20}
+							name={auth.requestedTo.name}
+							bureau={committeeMemberMap[auth.requestedToId].bureau}
+							isExecutive={committeeMemberMap[auth.requestedToId].isExecutive}
+						/>
+					) : (
+						<Avatar size={20} name={auth.requestedTo.name} variant="beam" />
+					)}
 					<Text size="2">{auth.requestedTo.name}</Text>
 				</div>
 			</div>

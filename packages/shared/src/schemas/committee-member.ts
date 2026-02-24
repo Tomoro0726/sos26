@@ -33,6 +33,39 @@ export const bureauLabelMap: Record<Bureau, string> = {
 } as const;
 
 /**
+ * 委員長団のテーマカラー
+ */
+export const EXECUTIVE_COLOR = "#e07798";
+
+/**
+ * 局ごとのテーマカラー
+ */
+export const bureauColorMap: Record<Bureau, string> = {
+	FINANCE: "#fbe983",
+	GENERAL_AFFAIRS: "#16a765",
+	PUBLIC_RELATIONS: "#ffad46",
+	EXTERNAL: "#3c78d8",
+	PROMOTION: "#16a765",
+	PLANNING: "#16a765",
+	STAGE_MANAGEMENT: "#a479e2",
+	HQ_PLANNING: "#16a765",
+	INFO_SYSTEM: "#3c78d8",
+	INFORMATION: "#16a765",
+} as const;
+
+/**
+ * 実委人のテーマカラーを取得する
+ * 委員長団の場合は専用カラーを返す
+ */
+export function getCommitteeMemberColor(
+	bureau: Bureau,
+	isExecutive: boolean
+): string {
+	if (isExecutive) return EXECUTIVE_COLOR;
+	return bureauColorMap[bureau];
+}
+
+/**
  * 委員メンバースキーマ
  */
 export const committeeMemberSchema = z.object({

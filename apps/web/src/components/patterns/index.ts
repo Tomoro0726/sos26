@@ -1,4 +1,5 @@
 export { CheckboxGroup, CheckboxGroupItem } from "./CheckboxGroup";
+export { CommitteeAvatar } from "./CommitteeAvatar/CommitteeAvatar";
 export type { DataTableFeatures } from "./DataTable";
 export {
 	AvatarGroupCell,

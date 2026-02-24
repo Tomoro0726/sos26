@@ -1,5 +1,5 @@
 import { AlertDialog, Badge, Heading, Separator, Text } from "@radix-ui/themes";
-import type { GetNoticeResponse } from "@sos26/shared";
+import type { Bureau, GetNoticeResponse } from "@sos26/shared";
 import {
 	IconArrowLeft,
 	IconCalendar,
@@ -72,12 +72,26 @@ function RouteComponent() {
 	const isCollaborator = notice.collaborators.some(c => c.user.id === user?.id);
 	const canEdit = isOwner || isCollaborator;
 
+	// userId -> Bureau/isExecutive のルックアップマップ
+	const committeeMemberMap = useMemo(() => {
+		const map: Record<string, { bureau: Bureau; isExecutive: boolean }> = {};
+		for (const m of committeeMembers) {
+			map[m.user.id] = { bureau: m.Bureau, isExecutive: m.isExecutive };
+		}
+		return map;
+	}, [committeeMembers]);
+
 	const collaboratorUserIds = new Set(notice.collaborators.map(c => c.user.id));
 	const availableMembers = committeeMembers
 		.filter(
 			m => m.user.id !== notice.ownerId && !collaboratorUserIds.has(m.user.id)
 		)
-		.map(m => ({ userId: m.user.id, name: m.user.name }));
+		.map(m => ({
+			userId: m.user.id,
+			name: m.user.name,
+			bureau: m.Bureau,
+			isExecutive: m.isExecutive,
+		}));
 
 	const approvers = committeeMembers
 		.filter(
@@ -85,7 +99,12 @@ function RouteComponent() {
 				m.user.id !== user?.id &&
 				m.permissions.some(p => p.permission === "NOTICE_APPROVE")
 		)
-		.map(m => ({ userId: m.user.id, name: m.user.name }));
+		.map(m => ({
+			userId: m.user.id,
+			name: m.user.name,
+			bureau: m.Bureau,
+			isExecutive: m.isExecutive,
+		}));
 
 	const handleAddCollaborator = async (userId: string) => {
 		try {
@@ -228,6 +247,7 @@ function RouteComponent() {
 				canEdit={canEdit}
 				availableMembers={availableMembers}
 				approvers={approvers}
+				committeeMemberMap={committeeMemberMap}
 				removingId={removingId}
 				onAddCollaborator={handleAddCollaborator}
 				onRemoveCollaborator={handleRemoveCollaborator}

@@ -1,7 +1,9 @@
 import { Dialog, TextField as RadixTextField, Text } from "@radix-ui/themes";
+import type { Bureau } from "@sos26/shared";
 import { IconSearch, IconSend, IconX } from "@tabler/icons-react";
-import Avatar from "boring-avatars";
 import { useEffect, useMemo, useState } from "react";
+
+import { CommitteeAvatar } from "@/components/patterns";
 
 import {
 	Button,
@@ -18,6 +20,8 @@ import styles from "./PublishRequestDialog.module.scss";
 type Approver = {
 	userId: string;
 	name: string;
+	bureau: Bureau;
+	isExecutive: boolean;
 };
 
 type Project = {
@@ -55,7 +59,14 @@ export function PublishRequestDialog({
 	const approverOptions = approvers.map(a => ({
 		value: a.userId,
 		label: a.name,
-		icon: <Avatar size={16} name={a.name} variant="beam" />,
+		icon: (
+			<CommitteeAvatar
+				size={16}
+				name={a.name}
+				bureau={a.bureau}
+				isExecutive={a.isExecutive}
+			/>
+		),
 	}));
 
 	const filteredProjects = useMemo(() => {
